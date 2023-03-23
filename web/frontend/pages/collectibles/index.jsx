@@ -8,14 +8,15 @@ import {
   Modal,
   TextField,
   AlphaStack,
+  Button,
 } from '@shopify/polaris';
 import { ConnectWallet, useAddress, useSDK } from '@thirdweb-dev/react';
 import { useCallback, useEffect, useState } from 'react';
 import { walletImage } from '../../assets';
-import { useNavigate } from '@shopify/app-bridge-react'
+import { useNavigate } from '@shopify/app-bridge-react';
 
 export default function CollectiblesPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const address = useAddress();
   const sdk = useSDK();
   const [contracts, setContracts] = useState([]);
@@ -24,29 +25,22 @@ export default function CollectiblesPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!address) return;
-    sdk.getContractList(address).then((data) => {
-      setContracts(
-        data
-          .map((contract) => {
-            const contractType = contract.contractType().then((data) => data);
-            if (
-              contractType !== 'nft-collection' ||
-              contract.chainId !== 80001
-            ) {
-              return null;
-            }
-            const metadata = contract.metadata().then((data) => data);
-            return {
-              address: contract.address,
-              name: metadata.name ?? 'No name',
-              description: metadata.description ?? 'No description',
-              symbol: metadata.symbol ?? 'No symbol',
-            };
-          })
-          .filter(Boolean)
-      );
-    });
+    async function getContracts() {
+      if (!address) return;
+      if (isLoading) return;
+      const contracts = await sdk.getContractList(address);
+      const collections = contracts.map(async (contract) => {
+        const { name, description, symbol } = await contract.metadata();
+        return {
+          address: contract.address,
+          name,
+          description,
+          symbol,
+        };
+      });
+      Promise.all(collections).then(setContracts);
+    }
+    getContracts();
   }, [address, isLoading]);
 
   const toggleModal = useCallback(() => setShowModal(!showModal), [showModal]);
@@ -97,7 +91,7 @@ export default function CollectiblesPage() {
           content: 'Create',
           onAction: handleCreateCollection,
           loading: isLoading,
-          disabled: isLoading
+          disabled: isLoading,
         }}
       >
         <Modal.Section>
@@ -145,11 +139,19 @@ export default function CollectiblesPage() {
                   />
                 }
               >
-                {contracts.map((contract) => (
-                  <IndexTable.Row key={contract.address}>
-                    <IndexTable.Cell>{contract.name}</IndexTable.Cell>
-                    <IndexTable.Cell>{contract.description}</IndexTable.Cell>
-                    <IndexTable.Cell>{contract.symbol}</IndexTable.Cell>
+                {contracts.map(({ address, name, description, symbol }) => (
+                  <IndexTable.Row key={address}>
+                    <IndexTable.Cell>
+                      <Button
+                        plain
+                        size="slim"
+                        onClick={() => navigate(`/collectibles/${address}`)}
+                      >
+                        {name}
+                      </Button>
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>{description}</IndexTable.Cell>
+                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
                   </IndexTable.Row>
                 ))}
               </IndexTable>
