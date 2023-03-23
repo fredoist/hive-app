@@ -9,6 +9,9 @@ import {
   TextField,
   AlphaStack,
   Button,
+  Frame,
+  Loading,
+  SkeletonPage,
 } from '@shopify/polaris';
 import { ConnectWallet, useAddress, useSDK } from '@thirdweb-dev/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -16,18 +19,20 @@ import { walletImage } from '../../assets';
 import { useNavigate } from '@shopify/app-bridge-react';
 
 export default function CollectiblesPage() {
-  const navigate = useNavigate();
   const address = useAddress();
   const sdk = useSDK();
+  const navigate = useNavigate();
   const [contracts, setContracts] = useState([]);
   const [collection, setCollection] = useState({ name: '', description: '' });
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
 
   useEffect(() => {
     async function getContracts() {
+      setIsLoading(true);
       if (!address) return;
-      if (isLoading) return;
+      if (isDeploying) return;
       const contracts = await sdk.getContractList(address);
       const collections = contracts.map(async (contract) => {
         const { name, description, symbol } = await contract.metadata();
@@ -39,9 +44,10 @@ export default function CollectiblesPage() {
         };
       });
       Promise.all(collections).then(setContracts);
+      setIsLoading(false);
     }
     getContracts();
-  }, [address, isLoading]);
+  }, [address, isDeploying]);
 
   const toggleModal = useCallback(() => setShowModal(!showModal), [showModal]);
 
@@ -49,19 +55,19 @@ export default function CollectiblesPage() {
     if (!address) return;
     if (!collection.name || !collection.description) return;
     try {
-      setIsLoading(true);
+      setIsDeploying(true);
       const contract = await sdk.deployer.deployNFTCollection({
         name: collection.name,
         description: collection.description,
         symbol: collection.name.slice(0, 3).toUpperCase(),
         primary_sale_recipient: address,
       });
-      setIsLoading(false);
+      setIsDeploying(false);
       setShowModal(false);
       navigate(`/collectibles/${contract}`);
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
+      setIsDeploying(false);
     }
   });
 
@@ -90,8 +96,8 @@ export default function CollectiblesPage() {
         primaryAction={{
           content: 'Create',
           onAction: handleCreateCollection,
-          loading: isLoading,
-          disabled: isLoading,
+          loading: isDeploying,
+          disabled: isDeploying,
         }}
       >
         <Modal.Section>
@@ -99,7 +105,7 @@ export default function CollectiblesPage() {
             <TextField
               type="text"
               label="Name"
-              disabled={isLoading}
+              disabled={isDeploying}
               value={collection.name}
               requiredIndicator
               onChange={(value) =>
@@ -109,7 +115,7 @@ export default function CollectiblesPage() {
             <TextField
               type="text"
               label="Description"
-              disabled={isLoading}
+              disabled={isDeploying}
               value={collection.description}
               onChange={(value) =>
                 setCollection({ ...collection, description: value })
@@ -122,39 +128,49 @@ export default function CollectiblesPage() {
         <Layout.Section>
           {address ? (
             <LegacyCard>
-              <IndexTable
-                resourceName={{ plural: 'collections', singular: 'collection' }}
-                headings={[
-                  { title: 'Name' },
-                  { title: 'Description' },
-                  { title: 'Symbol' },
-                ]}
-                itemCount={contracts.length}
-                selectable={false}
-                emptyState={
-                  <EmptySearchResult
-                    title={'No collections found'}
-                    description={'Get started by creating a collection'}
-                    withIllustration
-                  />
-                }
-              >
-                {contracts.map(({ address, name, description, symbol }) => (
-                  <IndexTable.Row key={address}>
-                    <IndexTable.Cell>
-                      <Button
-                        plain
-                        size="slim"
-                        onClick={() => navigate(`/collectibles/${address}`)}
-                      >
-                        {name}
-                      </Button>
-                    </IndexTable.Cell>
-                    <IndexTable.Cell>{description}</IndexTable.Cell>
-                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
-                  </IndexTable.Row>
-                ))}
-              </IndexTable>
+              {isLoading ? (
+                <Frame>
+                  <SkeletonPage />
+                  <Loading />
+                </Frame>
+              ) : (
+                <IndexTable
+                  resourceName={{
+                    plural: 'collections',
+                    singular: 'collection',
+                  }}
+                  headings={[
+                    { title: 'Name' },
+                    { title: 'Description' },
+                    { title: 'Symbol' },
+                  ]}
+                  itemCount={contracts.length}
+                  selectable={false}
+                  emptyState={
+                    <EmptySearchResult
+                      title={'No collections found'}
+                      description={'Get started by creating a collection'}
+                      withIllustration
+                    />
+                  }
+                >
+                  {contracts.map(({ address, name, description, symbol }) => (
+                    <IndexTable.Row key={address}>
+                      <IndexTable.Cell>
+                        <Button
+                          plain
+                          size="slim"
+                          onClick={() => navigate(`/collectibles/${address}`)}
+                        >
+                          {name}
+                        </Button>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell>{description}</IndexTable.Cell>
+                      <IndexTable.Cell>{symbol}</IndexTable.Cell>
+                    </IndexTable.Row>
+                  ))}
+                </IndexTable>
+              )}
             </LegacyCard>
           ) : (
             <EmptyState heading="Connect your wallet" image={walletImage}>
