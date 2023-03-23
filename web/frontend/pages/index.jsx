@@ -1,4 +1,4 @@
-import { Layout, Page, CalloutCard } from '@shopify/polaris';
+import { Layout, Page, CalloutCard, Text, Badge } from '@shopify/polaris';
 import {
   collectiblesImage,
   gatedContentImage,
@@ -30,11 +30,13 @@ export default function HomePage() {
             </p>
           </CalloutCard>
           <CalloutCard
-            title="Reward Coins"
+            title={<Text variant='headingMd'>Reward Coins <Badge>Work in progress</Badge></Text>}
             illustration={rewardCoinsImage}
             primaryAction={{
               content: 'Manage reward coins',
               onAction: () => navigate('/reward-coins'),
+              disabled: true,
+              helpText: 'Coming soon',
             }}
           >
             <p>
@@ -58,11 +60,12 @@ export default function HomePage() {
             </p>
           </CalloutCard>
           <CalloutCard
-            title="Gated Content"
+            title={<Text variant='headingMd'>Gated content <Badge>Work in progress</Badge></Text>}
             illustration={gatedContentImage}
             primaryAction={{
               content: 'Manage gated content',
               onAction: () => navigate('/gated-content'),
+              disabled: true,
             }}
           >
             <p>

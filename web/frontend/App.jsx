@@ -30,14 +30,6 @@ export default function App() {
                     label: 'Loyalty Programs',
                     destination: '/loyalty-programs',
                   },
-                  {
-                    label: 'Reward Coins',
-                    destination: '/reward-coins',
-                  },
-                  {
-                    label: 'Gated content',
-                    destination: '/gated-content',
-                  },
                 ]}
               />
               <Routes pages={pages} />
