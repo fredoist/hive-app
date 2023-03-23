@@ -21,8 +21,20 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Page name",
-                  destination: "/pagename",
+                  label: 'Collectibles',
+                  destination: '/collectibles',
+                },
+                {
+                  label: 'Loyalty Programs',
+                  destination: '/loyalty-programs',
+                },
+                {
+                  label: 'Reward Coins',
+                  destination: '/reward-coins',
+                },
+                {
+                  label: 'Gated content',
+                  destination: '/gate-content',
                 },
               ]}
             />

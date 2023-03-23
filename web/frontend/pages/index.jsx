@@ -1,84 +1,75 @@
+import { Layout, Page, CalloutCard } from '@shopify/polaris';
 import {
-  Card,
-  Page,
-  Layout,
-  TextContainer,
-  Image,
-  Stack,
-  Link,
-  Heading,
-} from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
-
-import { trophyImage } from "../assets";
-
-import { ProductsCard } from "../components";
+  collectiblesImage,
+  gatedContentImage,
+  loyaltyProgramImage,
+  rewardCoinsImage,
+} from '../assets';
+import { useNavigate } from '@shopify/app-bridge-react';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
-    <Page narrowWidth>
-      <TitleBar title="App name" primaryAction={null} />
+    <Page
+      title="Get started"
+      subtitle="Recognize your customers and reward them for their loyalty with unique collectibles, loyalty programs, and more."
+    >
       <Layout>
-        <Layout.Section>
-          <Card sectioned>
-            <Stack
-              wrap={false}
-              spacing="extraTight"
-              distribution="trailing"
-              alignment="center"
-            >
-              <Stack.Item fill>
-                <TextContainer spacing="loose">
-                  <Heading>Nice work on building a Shopify app 🎉</Heading>
-                  <p>
-                    Your app is ready to explore! It contains everything you
-                    need to get started including the{" "}
-                    <Link url="https://polaris.shopify.com/" external>
-                      Polaris design system
-                    </Link>
-                    ,{" "}
-                    <Link url="https://shopify.dev/api/admin-graphql" external>
-                      Shopify Admin API
-                    </Link>
-                    , and{" "}
-                    <Link
-                      url="https://shopify.dev/apps/tools/app-bridge"
-                      external
-                    >
-                      App Bridge
-                    </Link>{" "}
-                    UI library and components.
-                  </p>
-                  <p>
-                    Ready to go? Start populating your app with some sample
-                    products to view and test in your store.{" "}
-                  </p>
-                  <p>
-                    Learn more about building out your app in{" "}
-                    <Link
-                      url="https://shopify.dev/apps/getting-started/add-functionality"
-                      external
-                    >
-                      this Shopify tutorial
-                    </Link>{" "}
-                    📚{" "}
-                  </p>
-                </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
-                <div style={{ padding: "0 20px" }}>
-                  <Image
-                    source={trophyImage}
-                    alt="Nice work on building a Shopify app"
-                    width={120}
-                  />
-                </div>
-              </Stack.Item>
-            </Stack>
-          </Card>
+        <Layout.Section oneHalf>
+          <CalloutCard
+            title="Collectibles"
+            illustration={collectiblesImage}
+            primaryAction={{
+              content: 'Manage collectibles',
+              onAction: () => navigate('/collectibles'),
+            }}
+          >
+            <p>
+              Reward your customers and collab with other brands by offering
+              unique collectibles to your customers.
+            </p>
+          </CalloutCard>
+          <CalloutCard
+            title="Reward Coins"
+            illustration={rewardCoinsImage}
+            primaryAction={{
+              content: 'Manage reward coins',
+              onAction: () => navigate('/reward-coins'),
+            }}
+          >
+            <p>
+              Reward your customers with a digital currency that they can redeem
+              for special offers and discounts.
+            </p>
+          </CalloutCard>
         </Layout.Section>
-        <Layout.Section>
-          <ProductsCard />
+        <Layout.Section oneHalf>
+          <CalloutCard
+            title="Loyalty Programs"
+            illustration={loyaltyProgramImage}
+            primaryAction={{
+              content: 'Manage loyalty programs',
+              onAction: () => navigate('/loyalty-programs'),
+            }}
+          >
+            <p>
+              Reward your customers at different stages of their journey, from
+              initial free “drops” to claiming rewards at checkout.
+            </p>
+          </CalloutCard>
+          <CalloutCard
+            title="Gated Content"
+            illustration={gatedContentImage}
+            primaryAction={{
+              content: 'Manage gated content',
+              onAction: () => navigate('/gated-content'),
+            }}
+          >
+            <p>
+              Give collectible holders exclusive access to products, discounts,
+              and more when they connect their wallet to your store.
+            </p>
+          </CalloutCard>
         </Layout.Section>
       </Layout>
     </Page>

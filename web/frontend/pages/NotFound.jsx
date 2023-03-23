@@ -5,7 +5,6 @@ export default function NotFound() {
   return (
     <Page>
       <Card>
-        <Card.Section>
           <EmptyState
             heading="There is no page at this address"
             image={notFoundImage}
@@ -15,7 +14,6 @@ export default function NotFound() {
               you need.
             </p>
           </EmptyState>
-        </Card.Section>
       </Card>
     </Page>
   );
