@@ -34,7 +34,7 @@ export default function App() {
                 },
                 {
                   label: 'Gated content',
-                  destination: '/gate-content',
+                  destination: '/gated-content',
                 },
               ]}
             />
