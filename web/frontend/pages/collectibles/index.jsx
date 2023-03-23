@@ -29,11 +29,15 @@ export default function CollectiblesPage() {
   const [isDeploying, setIsDeploying] = useState(false);
 
   useEffect(() => {
+    if (!address) return;
+    if (isDeploying) return;
     async function getContracts() {
       setIsLoading(true);
-      if (!address) return;
-      if (isDeploying) return;
       const contracts = await sdk.getContractList(address);
+      if (!contracts.length) {
+        setIsLoading(false);
+        return;
+      }
       const collections = contracts.map(async (contract) => {
         const { name, description, symbol } = await contract.metadata();
         return {
@@ -43,8 +47,10 @@ export default function CollectiblesPage() {
           symbol,
         };
       });
-      Promise.all(collections).then(setContracts);
-      setIsLoading(false);
+      Promise.all(collections).then((result) => {
+        setIsLoading(false);
+        setContracts(result);
+      });
     }
     getContracts();
   }, [address, isDeploying]);
@@ -70,6 +76,15 @@ export default function CollectiblesPage() {
       setIsDeploying(false);
     }
   });
+
+  if (isLoading) {
+    return (
+      <Frame>
+        <SkeletonPage />
+        <Loading />
+      </Frame>
+    );
+  }
 
   return (
     <Page
@@ -128,49 +143,43 @@ export default function CollectiblesPage() {
         <Layout.Section>
           {address ? (
             <LegacyCard>
-              {isLoading ? (
-                <Frame>
-                  <SkeletonPage />
-                  <Loading />
-                </Frame>
-              ) : (
-                <IndexTable
-                  resourceName={{
-                    plural: 'collections',
-                    singular: 'collection',
-                  }}
-                  headings={[
-                    { title: 'Name' },
-                    { title: 'Description' },
-                    { title: 'Symbol' },
-                  ]}
-                  itemCount={contracts.length}
-                  selectable={false}
-                  emptyState={
-                    <EmptySearchResult
-                      title={'No collections found'}
-                      description={'Get started by creating a collection'}
-                      withIllustration
-                    />
-                  }
-                >
-                  {contracts.map(({ address, name, description, symbol }) => (
-                    <IndexTable.Row key={address}>
-                      <IndexTable.Cell>
-                        <Button
-                          plain
-                          size="slim"
-                          onClick={() => navigate(`/collectibles/${address}`)}
-                        >
-                          {name}
-                        </Button>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>{description}</IndexTable.Cell>
-                      <IndexTable.Cell>{symbol}</IndexTable.Cell>
-                    </IndexTable.Row>
-                  ))}
-                </IndexTable>
-              )}
+              <IndexTable
+                resourceName={{
+                  plural: 'collections',
+                  singular: 'collection',
+                }}
+                headings={[
+                  { title: 'Name' },
+                  { title: 'Description' },
+                  { title: 'Symbol' },
+                ]}
+                itemCount={contracts.length}
+                selectable={false}
+                loading={isLoading}
+                emptyState={
+                  <EmptySearchResult
+                    title={'No collections found'}
+                    description={'Get started by creating a collection'}
+                    withIllustration
+                  />
+                }
+              >
+                {contracts.map(({ address, name, description, symbol }) => (
+                  <IndexTable.Row key={address}>
+                    <IndexTable.Cell>
+                      <Button
+                        plain
+                        size="slim"
+                        onClick={() => navigate(`/collectibles/${address}`)}
+                      >
+                        {name}
+                      </Button>
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>{description}</IndexTable.Cell>
+                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
+                  </IndexTable.Row>
+                ))}
+              </IndexTable>
             </LegacyCard>
           ) : (
             <EmptyState heading="Connect your wallet" image={walletImage}>
