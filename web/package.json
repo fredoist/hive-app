@@ -17,7 +17,7 @@
     "@thirdweb-dev/sdk": "^3.10.3",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
-    "ethers": "^6.2.0",
+    "ethers": "^5.7.2",
     "serve-static": "^1.14.1"
   },
   "devDependencies": {
