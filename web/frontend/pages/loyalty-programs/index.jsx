@@ -1,6 +1,9 @@
 import { Page } from '@shopify/polaris';
+import { useNavigate } from '@shopify/app-bridge-react';
 
 export default function LoyaltyProgramsPage() {
+  const navigate = useNavigate();
+
   return (
     <Page
       compactTitle
@@ -9,7 +12,7 @@ export default function LoyaltyProgramsPage() {
               initial free “drops” to claiming rewards at checkout."
       primaryAction={{
         content: 'Create campaign',
-        onAction: () => alert('Create collectible'),
+        onAction: () => navigate('/loyalty-programs/create'),
       }}
     ></Page>
   );
