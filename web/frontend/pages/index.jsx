@@ -1,14 +1,14 @@
-import { Layout, Page, CalloutCard, Text, Badge } from '@shopify/polaris';
+import {Layout, Page, CalloutCard, Text, Badge} from '@shopify/polaris'
 import {
   collectiblesImage,
   gatedContentImage,
   loyaltyProgramImage,
-  rewardCoinsImage,
-} from '../assets';
-import { useNavigate } from '@shopify/app-bridge-react';
+  rewardCoinsImage
+} from '../assets'
+import {useNavigate} from '@shopify/app-bridge-react'
 
 export default function HomePage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   return (
     <Page
       title="Get started"
@@ -21,27 +21,31 @@ export default function HomePage() {
             illustration={collectiblesImage}
             primaryAction={{
               content: 'Manage collectibles',
-              onAction: () => navigate('/collectibles'),
+              onAction: () => navigate('/collectibles')
             }}
           >
             <p>
-              Reward your customers and collab with other brands by offering
-              unique collectibles to your customers.
+              Reward your customers and collab with other brands by offering unique collectibles to
+              your customers.
             </p>
           </CalloutCard>
           <CalloutCard
-            title={<Text variant='headingMd'>Reward Coins <Badge>Work in progress</Badge></Text>}
+            title={
+              <Text variant="headingMd">
+                Reward Coins <Badge>Work in progress</Badge>
+              </Text>
+            }
             illustration={rewardCoinsImage}
             primaryAction={{
               content: 'Manage reward coins',
               onAction: () => navigate('/reward-coins'),
               disabled: true,
-              helpText: 'Coming soon',
+              helpText: 'Coming soon'
             }}
           >
             <p>
-              Reward your customers with a digital currency that they can redeem
-              for special offers and discounts.
+              Reward your customers with a digital currency that they can redeem for special offers
+              and discounts.
             </p>
           </CalloutCard>
         </Layout.Section>
@@ -51,30 +55,34 @@ export default function HomePage() {
             illustration={loyaltyProgramImage}
             primaryAction={{
               content: 'Manage loyalty programs',
-              onAction: () => navigate('/loyalty-programs'),
+              onAction: () => navigate('/loyalty-programs')
             }}
           >
             <p>
-              Reward your customers at different stages of their journey, from
-              initial free “drops” to claiming rewards at checkout.
+              Reward your customers at different stages of their journey, from initial free “drops”
+              to claiming rewards at checkout.
             </p>
           </CalloutCard>
           <CalloutCard
-            title={<Text variant='headingMd'>Gated content <Badge>Work in progress</Badge></Text>}
+            title={
+              <Text variant="headingMd">
+                Gated content <Badge>Work in progress</Badge>
+              </Text>
+            }
             illustration={gatedContentImage}
             primaryAction={{
               content: 'Manage gated content',
               onAction: () => navigate('/gated-content'),
-              disabled: true,
+              disabled: true
             }}
           >
             <p>
-              Give collectible holders exclusive access to products, discounts,
-              and more when they connect their wallet to your store.
+              Give collectible holders exclusive access to products, discounts, and more when they
+              connect their wallet to your store.
             </p>
           </CalloutCard>
         </Layout.Section>
       </Layout>
     </Page>
-  );
+  )
 }

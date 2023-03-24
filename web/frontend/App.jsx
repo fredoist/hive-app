@@ -1,18 +1,14 @@
-import { BrowserRouter } from 'react-router-dom';
-import { NavigationMenu } from '@shopify/app-bridge-react';
-import Routes from './Routes';
+import {BrowserRouter} from 'react-router-dom'
+import {NavigationMenu} from '@shopify/app-bridge-react'
+import Routes from './Routes'
 
-import {
-  AppBridgeProvider,
-  QueryProvider,
-  PolarisProvider,
-} from './components';
-import { ThirdwebProvider } from '@thirdweb-dev/react';
+import {AppBridgeProvider, QueryProvider, PolarisProvider} from './components'
+import {ThirdwebProvider} from '@thirdweb-dev/react'
 
 export default function App() {
   // Any .tsx or .jsx files in /pages will become a route
   // See documentation for <Routes /> for more info
-  const pages = import.meta.globEager('./pages/**/!(*.test.[jt]sx)*.([jt]sx)');
+  const pages = import.meta.globEager('./pages/**/!(*.test.[jt]sx)*.([jt]sx)')
 
   return (
     <ThirdwebProvider activeChain="mumbai">
@@ -24,12 +20,12 @@ export default function App() {
                 navigationLinks={[
                   {
                     label: 'Collectibles',
-                    destination: '/collectibles',
+                    destination: '/collectibles'
                   },
                   {
                     label: 'Loyalty Programs',
-                    destination: '/loyalty-programs',
-                  },
+                    destination: '/loyalty-programs'
+                  }
                 ]}
               />
               <Routes pages={pages} />
@@ -38,5 +34,5 @@ export default function App() {
         </BrowserRouter>
       </PolarisProvider>
     </ThirdwebProvider>
-  );
+  )
 }

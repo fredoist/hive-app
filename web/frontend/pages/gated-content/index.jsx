@@ -1,4 +1,4 @@
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
 
 export default function GatedContentPage() {
   return (
@@ -8,8 +8,8 @@ export default function GatedContentPage() {
               and more when they connect their wallet to your store."
       primaryAction={{
         content: 'Create gate',
-        onAction: () => alert('Create collectible'),
+        onAction: () => alert('Create collectible')
       }}
     ></ThirdwebLayout>
-  );
+  )
 }

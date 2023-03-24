@@ -6,25 +6,25 @@ import {
   TextField,
   AlphaStack,
   Button,
-  AlphaCard,
-} from '@shopify/polaris';
-import { useAddress } from '@thirdweb-dev/react';
-import { useState } from 'react';
-import { useNavigate } from '@shopify/app-bridge-react';
+  AlphaCard
+} from '@shopify/polaris'
+import {useAddress} from '@thirdweb-dev/react'
+import {useState} from 'react'
+import {useNavigate} from '@shopify/app-bridge-react'
 
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
-import useCollections from '../../hooks/useCollections';
-import useDeploy from '../../hooks/useDeploy';
-import useModal from '../../hooks/useModal';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
+import useCollections from '../../hooks/useCollections'
+import useDeploy from '../../hooks/useDeploy'
+import useModal from '../../hooks/useModal'
 
 export default function CollectiblesPage() {
-  const address = useAddress();
-  const navigate = useNavigate();
-  const [refetch, setRefetch] = useState(false);
-  const { isLoading: isDeploying, deployCollection } = useDeploy();
-  const { collections, isLoading, error } = useCollections({ refetch });
-  const [collection, setCollection] = useState({ name: '', description: '' });
-  const { showModal, toggleModal } = useModal();
+  const address = useAddress()
+  const navigate = useNavigate()
+  const [refetch, setRefetch] = useState(false)
+  const {isLoading: isDeploying, deployCollection} = useDeploy()
+  const {collections, isLoading, error} = useCollections({refetch})
+  const [collection, setCollection] = useState({name: '', description: ''})
+  const {showModal, toggleModal} = useModal()
 
   return (
     <ThirdwebLayout
@@ -37,9 +37,7 @@ export default function CollectiblesPage() {
         content: 'Create collection',
         disabled: !address,
         onAction: toggleModal,
-        helpText:
-          !address &&
-          'You need to connect a digital wallet to create your collectibles',
+        helpText: !address && 'You need to connect a digital wallet to create your collectibles'
       }}
     >
       <Modal
@@ -54,10 +52,10 @@ export default function CollectiblesPage() {
           loading: isDeploying,
           disabled: isDeploying,
           onAction: async () => {
-            await deployCollection(collection);
-            toggleModal();
-            setRefetch(!refetch);
-          },
+            await deployCollection(collection)
+            toggleModal()
+            setRefetch(!refetch)
+          }
         }}
       >
         <Modal.Section>
@@ -68,18 +66,14 @@ export default function CollectiblesPage() {
               disabled={isDeploying}
               value={collection.name}
               requiredIndicator
-              onChange={(value) =>
-                setCollection({ ...collection, name: value })
-              }
+              onChange={value => setCollection({...collection, name: value})}
             />
             <TextField
               type="text"
               label="Description"
               disabled={isDeploying}
               value={collection.description}
-              onChange={(value) =>
-                setCollection({ ...collection, description: value })
-              }
+              onChange={value => setCollection({...collection, description: value})}
             />
           </AlphaStack>
         </Modal.Section>
@@ -89,13 +83,9 @@ export default function CollectiblesPage() {
           <IndexTable
             resourceName={{
               plural: 'collections',
-              singular: 'collection',
+              singular: 'collection'
             }}
-            headings={[
-              { title: 'Name' },
-              { title: 'Description' },
-              { title: 'Symbol' },
-            ]}
+            headings={[{title: 'Name'}, {title: 'Description'}, {title: 'Symbol'}]}
             itemCount={collections.length}
             selectable={false}
             loading={isLoading}
@@ -107,14 +97,10 @@ export default function CollectiblesPage() {
               />
             }
           >
-            {collections.map(({ address, name, description, symbol }) => (
+            {collections.map(({address, name, description, symbol}) => (
               <IndexTable.Row key={address}>
                 <IndexTable.Cell>
-                  <Button
-                    plain
-                    size="slim"
-                    onClick={() => navigate(`/collectibles/${address}`)}
-                  >
+                  <Button plain size="slim" onClick={() => navigate(`/collectibles/${address}`)}>
                     {name}
                   </Button>
                 </IndexTable.Cell>
@@ -126,5 +112,5 @@ export default function CollectiblesPage() {
         </AlphaCard>
       </Layout.Section>
     </ThirdwebLayout>
-  );
+  )
 }

@@ -7,27 +7,24 @@ import {
   RadioButton,
   Select,
   Text,
-  TextField,
-} from '@shopify/polaris';
-import { useCallback, useState } from 'react';
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
-import useCollections from '../../hooks/useCollections';
+  TextField
+} from '@shopify/polaris'
+import {useCallback, useState} from 'react'
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
+import useCollections from '../../hooks/useCollections'
 
 export default function LoyaltyProgramsPage() {
-  const [campaignType, setCampaignType] = useState('discount');
-  const [discount, setDiscount] = useState(0);
-  const { collections, isLoading, error } = useCollections({ refetch: false });
-  const [selected, setSelected] = useState();
+  const [campaignType, setCampaignType] = useState('discount')
+  const [discount, setDiscount] = useState(0)
+  const {collections, isLoading, error} = useCollections({refetch: false})
+  const [selected, setSelected] = useState()
 
-  const handleCampaignTypeChange = useCallback(
-    (_, value) => setCampaignType(value),
-    []
-  );
-  const handleSelectChange = useCallback((sel) => setSelected(sel), []);
+  const handleCampaignTypeChange = useCallback((_, value) => setCampaignType(value), [])
+  const handleSelectChange = useCallback(sel => setSelected(sel), [])
 
   const handleSubmit = useCallback(() => {
     //
-  }, []);
+  }, [])
 
   return (
     <ThirdwebLayout
@@ -55,9 +52,9 @@ export default function LoyaltyProgramsPage() {
                 <Select
                   label="Apply to collection"
                   value={selected}
-                  options={collections.map(({ name, address }) => ({
+                  options={collections.map(({name, address}) => ({
                     label: name,
-                    value: address,
+                    value: address
                   }))}
                   onChange={handleSelectChange}
                 />
@@ -76,5 +73,5 @@ export default function LoyaltyProgramsPage() {
         </AlphaCard>
       </Layout.Section>
     </ThirdwebLayout>
-  );
+  )
 }

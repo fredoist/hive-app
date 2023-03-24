@@ -1,18 +1,11 @@
-import {
-  EmptyState,
-  Frame,
-  Layout,
-  Loading,
-  Page,
-  SkeletonPage,
-} from '@shopify/polaris';
-import { ConnectWallet, useAddress } from '@thirdweb-dev/react';
+import {EmptyState, Frame, Layout, Loading, Page, SkeletonPage} from '@shopify/polaris'
+import {ConnectWallet, useAddress} from '@thirdweb-dev/react'
 
-import { walletImage } from '../../assets';
+import {walletImage} from '../../assets'
 
 /** @param {import('@shopify/polaris').PageProps} props */
 export default function ThirdwebLayout(props) {
-  const address = useAddress();
+  const address = useAddress()
 
   if (props.loading) {
     return (
@@ -20,7 +13,7 @@ export default function ThirdwebLayout(props) {
         <Loading />
         <SkeletonPage primaryAction />
       </Frame>
-    );
+    )
   }
 
   if (props.error) {
@@ -28,7 +21,7 @@ export default function ThirdwebLayout(props) {
       <Page title="Error">
         <p>There was an error loading this page.</p>
       </Page>
-    );
+    )
   }
 
   return (
@@ -39,7 +32,7 @@ export default function ThirdwebLayout(props) {
         ) : (
           <Layout.Section>
             <EmptyState heading="Connect your wallet" image={walletImage}>
-              <p style={{ marginBottom: '3rem' }}>
+              <p style={{marginBottom: '3rem'}}>
                 You need to connect a digital wallet to continue.
               </p>
               <ConnectWallet colorMode="dark" btnTitle="Connect wallet" />
@@ -48,5 +41,5 @@ export default function ThirdwebLayout(props) {
         )}
       </Layout>
     </Page>
-  );
+  )
 }

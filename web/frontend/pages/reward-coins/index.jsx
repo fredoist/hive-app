@@ -1,4 +1,4 @@
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
 
 export default function RewardCoinsPage() {
   return (
@@ -7,5 +7,5 @@ export default function RewardCoinsPage() {
       subtitle="Reward your customers with a digital currency that they can redeem
               for special offers and discounts."
     ></ThirdwebLayout>
-  );
+  )
 }
