@@ -9,38 +9,15 @@ import {
   Text,
   TextField,
 } from '@shopify/polaris';
-import { useCallback, useEffect, useState } from 'react';
-import { useAddress, useSDK } from '@thirdweb-dev/react';
+import { useCallback, useState } from 'react';
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
+import useCollections from '../../hooks/useCollections';
 
 export default function LoyaltyProgramsPage() {
   const [campaignType, setCampaignType] = useState('discount');
   const [discount, setDiscount] = useState(0);
-  const address = useAddress();
-  const sdk = useSDK();
-  const [contracts, setContracts] = useState([]);
+  const { collections, isLoading, error } = useCollections({ refetch: false });
   const [selected, setSelected] = useState();
-
-  useEffect(() => {
-    if (!address) return;
-    async function getContracts() {
-      const contracts = await sdk.getContractList(address);
-      if (!contracts.length) {
-        return;
-      }
-      const collections = contracts.map(async (contract) => {
-        const { name } = await contract.metadata();
-        return {
-          label: name,
-          value: contract.address,
-        };
-      });
-      Promise.all(collections).then((result) => {
-        setContracts(result);
-      });
-    }
-    getContracts();
-  }, [address]);
 
   const handleCampaignTypeChange = useCallback(
     (_, value) => setCampaignType(value),
@@ -54,6 +31,8 @@ export default function LoyaltyProgramsPage() {
 
   return (
     <ThirdwebLayout
+      error={error}
+      loading={isLoading}
       title="Create a campaign"
       subtitle="Offer discounts for collectible holders"
     >
@@ -76,7 +55,10 @@ export default function LoyaltyProgramsPage() {
                 <Select
                   label="Apply to collection"
                   value={selected}
-                  options={contracts}
+                  options={collections.map(({ name, address }) => ({
+                    label: name,
+                    value: address,
+                  }))}
                   onChange={handleSelectChange}
                 />
                 <TextField

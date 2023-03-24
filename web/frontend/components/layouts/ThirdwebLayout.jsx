@@ -1,4 +1,11 @@
-import { EmptyState, Layout, Page } from '@shopify/polaris';
+import {
+  EmptyState,
+  Frame,
+  Layout,
+  Loading,
+  Page,
+  SkeletonPage,
+} from '@shopify/polaris';
 import { ConnectWallet, useAddress } from '@thirdweb-dev/react';
 
 import { walletImage } from '../../assets';
@@ -6,6 +13,23 @@ import { walletImage } from '../../assets';
 /** @param {import('@shopify/polaris').PageProps} props */
 export default function ThirdwebLayout(props) {
   const address = useAddress();
+
+  if (props.loading) {
+    return (
+      <Frame>
+        <Loading />
+        <SkeletonPage primaryAction />
+      </Frame>
+    );
+  }
+
+  if (props.error) {
+    return (
+      <Page title="Error">
+        <p>There was an error loading this page.</p>
+      </Page>
+    );
+  }
 
   return (
     <Page {...props}>

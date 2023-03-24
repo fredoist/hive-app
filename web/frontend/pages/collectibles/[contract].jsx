@@ -4,13 +4,9 @@ import {
   Columns,
   DropZone,
   EmptySearchResult,
-  Frame,
   IndexTable,
   Layout,
-  Loading,
   Modal,
-  Page,
-  SkeletonPage,
   TextField,
   Thumbnail,
 } from '@shopify/polaris';
@@ -42,23 +38,10 @@ export default function ContractPage() {
     []
   );
 
-  if (isLoading) {
-    return (
-      <Frame>
-        <Loading />
-        <SkeletonPage />
-      </Frame>
-    );
-  }
-  if (error) {
-    return (
-      <Page title="Error">
-        <p>There was an error loading this page.</p>
-      </Page>
-    );
-  }
   return (
     <ThirdwebLayout
+      error={error}
+      loading={isLoading}
       title={`${collection.name}`}
       subtitle={collection.description}
       primaryAction={{

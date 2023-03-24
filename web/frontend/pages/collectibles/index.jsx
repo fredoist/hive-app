@@ -6,9 +6,6 @@ import {
   TextField,
   AlphaStack,
   Button,
-  Frame,
-  Loading,
-  SkeletonPage,
   AlphaCard,
 } from '@shopify/polaris';
 import { useAddress } from '@thirdweb-dev/react';
@@ -25,21 +22,14 @@ export default function CollectiblesPage() {
   const navigate = useNavigate();
   const [refetch, setRefetch] = useState(false);
   const { isLoading: isDeploying, deployCollection } = useDeploy();
-  const { collections, isLoading } = useCollections({ refetch });
+  const { collections, isLoading, error } = useCollections({ refetch });
   const [collection, setCollection] = useState({ name: '', description: '' });
   const { showModal, toggleModal } = useModal();
 
-  if (isLoading) {
-    return (
-      <Frame>
-        <SkeletonPage />
-        <Loading />
-      </Frame>
-    );
-  }
-
   return (
     <ThirdwebLayout
+      error={error}
+      loading={isLoading}
       title="Collectibles"
       subtitle="Reward your customers and collab with other brands by offering
     unique collectibles to your customers."
