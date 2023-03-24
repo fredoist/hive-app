@@ -23,6 +23,7 @@ import {
 } from '@thirdweb-dev/react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
 
 export default function ContractPage() {
   const { contract: contractId } = useParams();

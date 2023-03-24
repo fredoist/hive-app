@@ -11,6 +11,7 @@ import {
 } from '@shopify/polaris';
 import { useCallback, useEffect, useState } from 'react';
 import { useAddress, useSDK } from '@thirdweb-dev/react';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
 
 export default function LoyaltyProgramsPage() {
   const [campaignType, setCampaignType] = useState('discount');

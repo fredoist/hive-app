@@ -1,4 +1,4 @@
-import { ThirdwebLayout } from '../../components/ThirdwebLayout';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
 
 export default function RewardCoinsPage() {
   return (
