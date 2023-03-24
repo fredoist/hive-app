@@ -1,4 +1,5 @@
 import {
+  AlphaCard,
   AlphaStack,
   Columns,
   DropZone,
@@ -6,7 +7,6 @@ import {
   Frame,
   IndexTable,
   Layout,
-  LegacyCard,
   Loading,
   Modal,
   Page,
@@ -14,77 +14,43 @@ import {
   TextField,
   Thumbnail,
 } from '@shopify/polaris';
-import {
-  useAddress,
-  useContract,
-  useMetadata,
-  useMintNFT,
-  useNFTs,
-} from '@thirdweb-dev/react';
+import { useAddress } from '@thirdweb-dev/react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
+import useCollectibles from '../../hooks/useCollectibles';
+import useModal from '../../hooks/useModal';
 
 export default function ContractPage() {
-  const { contract: contractId } = useParams();
+  const { contract } = useParams();
   const address = useAddress();
-  const [showModal, setShowModal] = useState(false);
+  const {
+    isDeploying,
+    addCollectible,
+    isLoading,
+    error,
+    collection,
+    collectibles,
+  } = useCollectibles(contract);
+  const { showModal, toggleModal } = useModal();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-  const { contract } = useContract(contractId);
-  const {
-    data: collection,
-    isLoading: isLoadingCollection,
-    error: collectionError,
-  } = useMetadata(contract);
-  const {
-    data: collectibles,
-    isLoading: isLoadingCollectibles,
-    error: collectiblesError,
-  } = useNFTs(contract);
-  const {
-    mutateAsync: mintNFT,
-    isLoading: isDeploying,
-    error: mintError,
-  } = useMintNFT(contract);
 
-  const toggleModal = useCallback(
-    async () => setShowModal(!showModal),
-    [showModal]
-  );
   const handleDropZoneDrop = useCallback(
     (_dropFiles, acceptedFiles, _rejectedFiles) => setImage(acceptedFiles[0]),
     []
   );
-  const handleCreateCollectible = useCallback(async () => {
-    if (!address) return;
-    try {
-      await mintNFT({
-        metadata: {
-          name,
-          description,
-          image,
-        },
-        to: address,
-      });
-      setName('');
-      setDescription('');
-      setImage(null);
-      toggleModal();
-    } catch (error) {
-      console.error(error);
-    }
-  }, [name, description, image]);
 
-  if (isLoadingCollection || isLoadingCollectibles)
+  if (isLoading) {
     return (
       <Frame>
         <Loading />
         <SkeletonPage />
       </Frame>
     );
-  if (collectionError || collectiblesError || mintError) {
+  }
+  if (error) {
     return (
       <Page title="Error">
         <p>There was an error loading this page.</p>
@@ -110,7 +76,14 @@ export default function ContractPage() {
         onClose={toggleModal}
         primaryAction={{
           content: 'Add collectible',
-          onAction: handleCreateCollectible,
+          onAction: async () => {
+            await addCollectible({
+              name,
+              description,
+              image,
+            });
+            toggleModal();
+          },
           loading: isDeploying,
           disabled: isDeploying,
         }}
@@ -149,7 +122,7 @@ export default function ContractPage() {
         </Modal.Section>
       </Modal>
       <Layout.Section>
-        <LegacyCard>
+        <AlphaCard padding="0">
           <IndexTable
             resourceName={{
               plural: 'collectibles',
@@ -182,7 +155,7 @@ export default function ContractPage() {
               )
             )}
           </IndexTable>
-        </LegacyCard>
+        </AlphaCard>
       </Layout.Section>
     </ThirdwebLayout>
   );
