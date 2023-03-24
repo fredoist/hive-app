@@ -23,8 +23,9 @@ import useModal from '../../hooks/useModal';
 export default function CollectiblesPage() {
   const address = useAddress();
   const navigate = useNavigate();
+  const [refetch, setRefetch] = useState(false);
   const { isLoading: isDeploying, deployCollection } = useDeploy();
-  const { collections, isLoading } = useCollections({ refetch: isDeploying });
+  const { collections, isLoading } = useCollections({ refetch });
   const [collection, setCollection] = useState({ name: '', description: '' });
   const { showModal, toggleModal } = useModal();
 
@@ -65,6 +66,7 @@ export default function CollectiblesPage() {
           onAction: async () => {
             await deployCollection(collection);
             toggleModal();
+            setRefetch(!refetch);
           },
         }}
       >
