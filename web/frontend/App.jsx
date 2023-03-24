@@ -7,7 +7,6 @@ import {
   QueryProvider,
   PolarisProvider,
 } from './components';
-import { ThirdwebProvider } from '@thirdweb-dev/react';
 
 export default function App() {
   // Any .tsx or .jsx files in /pages will become a route
@@ -15,28 +14,26 @@ export default function App() {
   const pages = import.meta.globEager('./pages/**/!(*.test.[jt]sx)*.([jt]sx)');
 
   return (
-    <ThirdwebProvider activeChain="mumbai">
-      <PolarisProvider>
-        <BrowserRouter>
-          <AppBridgeProvider>
-            <QueryProvider>
-              <NavigationMenu
-                navigationLinks={[
-                  {
-                    label: 'Collectibles',
-                    destination: '/collectibles',
-                  },
-                  {
-                    label: 'Loyalty Programs',
-                    destination: '/loyalty-programs',
-                  },
-                ]}
-              />
-              <Routes pages={pages} />
-            </QueryProvider>
-          </AppBridgeProvider>
-        </BrowserRouter>
-      </PolarisProvider>
-    </ThirdwebProvider>
+    <PolarisProvider>
+      <BrowserRouter>
+        <AppBridgeProvider>
+          <QueryProvider>
+            <NavigationMenu
+              navigationLinks={[
+                {
+                  label: 'Collectibles',
+                  destination: '/collectibles',
+                },
+                {
+                  label: 'Loyalty Programs',
+                  destination: '/loyalty-programs',
+                },
+              ]}
+            />
+            <Routes pages={pages} />
+          </QueryProvider>
+        </AppBridgeProvider>
+      </BrowserRouter>
+    </PolarisProvider>
   );
 }

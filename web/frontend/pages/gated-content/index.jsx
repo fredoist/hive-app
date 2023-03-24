@@ -1,9 +1,8 @@
-import { Page } from '@shopify/polaris';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
 
 export default function GatedContentPage() {
   return (
-    <Page
-      compactTitle
+    <ThirdwebLayout
       title="Gated Content"
       subtitle="Give collectible holders exclusive access to products, discounts,
               and more when they connect their wallet to your store."
@@ -11,6 +10,6 @@ export default function GatedContentPage() {
         content: 'Create gate',
         onAction: () => alert('Create collectible'),
       }}
-    ></Page>
+    ></ThirdwebLayout>
   );
 }

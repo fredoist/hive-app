@@ -3,9 +3,7 @@ import {
   Columns,
   DropZone,
   EmptySearchResult,
-  EmptyState,
   Frame,
-  Image,
   IndexTable,
   Layout,
   LegacyCard,
@@ -17,7 +15,6 @@ import {
   Thumbnail,
 } from '@shopify/polaris';
 import {
-  ConnectWallet,
   useAddress,
   useContract,
   useMetadata,
@@ -26,7 +23,6 @@ import {
 } from '@thirdweb-dev/react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { walletImage } from '../../assets';
 
 export default function ContractPage() {
   const { contract: contractId } = useParams();
@@ -95,7 +91,7 @@ export default function ContractPage() {
     );
   }
   return (
-    <Page
+    <ThirdwebLayout
       title={`${collection.name}`}
       subtitle={collection.description}
       primaryAction={{
@@ -151,53 +147,42 @@ export default function ContractPage() {
           </Columns>
         </Modal.Section>
       </Modal>
-      <Layout>
-        <Layout.Section>
-          {address ? (
-            <LegacyCard>
-              <IndexTable
-                resourceName={{
-                  plural: 'collectibles',
-                  singular: 'collectible',
-                }}
-                headings={[
-                  { title: 'Image' },
-                  { title: 'Name' },
-                  { title: 'Description' },
-                ]}
-                itemCount={collectibles.length}
-                selectable={false}
-                emptyState={
-                  <EmptySearchResult
-                    title={'No collectibles found'}
-                    description={'Get started by creating a collectible'}
-                    withIllustration
-                  />
-                }
-              >
-                {collectibles.map(
-                  ({ metadata: { id, name, description, image } }) => (
-                    <IndexTable.Row key={id}>
-                      <IndexTable.Cell>
-                        <Thumbnail source={image} alt={name} size="medium" />
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>{name}</IndexTable.Cell>
-                      <IndexTable.Cell>{description}</IndexTable.Cell>
-                    </IndexTable.Row>
-                  )
-                )}
-              </IndexTable>
-            </LegacyCard>
-          ) : (
-            <EmptyState heading="Connect your wallet" image={walletImage}>
-              <p style={{ marginBottom: '3rem' }}>
-                You need to connect a digital wallet to create your collectibles
-              </p>
-              <ConnectWallet />
-            </EmptyState>
-          )}
-        </Layout.Section>
-      </Layout>
-    </Page>
+      <Layout.Section>
+        <LegacyCard>
+          <IndexTable
+            resourceName={{
+              plural: 'collectibles',
+              singular: 'collectible',
+            }}
+            headings={[
+              { title: 'Image' },
+              { title: 'Name' },
+              { title: 'Description' },
+            ]}
+            itemCount={collectibles.length}
+            selectable={false}
+            emptyState={
+              <EmptySearchResult
+                title={'No collectibles found'}
+                description={'Get started by creating a collectible'}
+                withIllustration
+              />
+            }
+          >
+            {collectibles.map(
+              ({ metadata: { id, name, description, image } }) => (
+                <IndexTable.Row key={id}>
+                  <IndexTable.Cell>
+                    <Thumbnail source={image} alt={name} size="medium" />
+                  </IndexTable.Cell>
+                  <IndexTable.Cell>{name}</IndexTable.Cell>
+                  <IndexTable.Cell>{description}</IndexTable.Cell>
+                </IndexTable.Row>
+              )
+            )}
+          </IndexTable>
+        </LegacyCard>
+      </Layout.Section>
+    </ThirdwebLayout>
   );
 }

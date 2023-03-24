@@ -1,7 +1,5 @@
 import {
   Layout,
-  Page,
-  EmptyState,
   IndexTable,
   LegacyCard,
   EmptySearchResult,
@@ -13,10 +11,10 @@ import {
   Loading,
   SkeletonPage,
 } from '@shopify/polaris';
-import { ConnectWallet, useAddress, useSDK } from '@thirdweb-dev/react';
+import { useAddress, useSDK } from '@thirdweb-dev/react';
 import { useCallback, useEffect, useState } from 'react';
-import { walletImage } from '../../assets';
 import { useNavigate } from '@shopify/app-bridge-react';
+import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
 
 export default function CollectiblesPage() {
   const address = useAddress();
@@ -87,11 +85,10 @@ export default function CollectiblesPage() {
   }
 
   return (
-    <Page
-      compactTitle
+    <ThirdwebLayout
       title="Collectibles"
       subtitle="Reward your customers and collab with other brands by offering
-              unique collectibles to your customers."
+    unique collectibles to your customers."
       primaryAction={{
         content: 'Create collection',
         disabled: !address,
@@ -139,58 +136,47 @@ export default function CollectiblesPage() {
           </AlphaStack>
         </Modal.Section>
       </Modal>
-      <Layout>
-        <Layout.Section>
-          {address ? (
-            <LegacyCard>
-              <IndexTable
-                resourceName={{
-                  plural: 'collections',
-                  singular: 'collection',
-                }}
-                headings={[
-                  { title: 'Name' },
-                  { title: 'Description' },
-                  { title: 'Symbol' },
-                ]}
-                itemCount={contracts.length}
-                selectable={false}
-                loading={isLoading}
-                emptyState={
-                  <EmptySearchResult
-                    title={'No collections found'}
-                    description={'Get started by creating a collection'}
-                    withIllustration
-                  />
-                }
-              >
-                {contracts.map(({ address, name, description, symbol }) => (
-                  <IndexTable.Row key={address}>
-                    <IndexTable.Cell>
-                      <Button
-                        plain
-                        size="slim"
-                        onClick={() => navigate(`/collectibles/${address}`)}
-                      >
-                        {name}
-                      </Button>
-                    </IndexTable.Cell>
-                    <IndexTable.Cell>{description}</IndexTable.Cell>
-                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
-                  </IndexTable.Row>
-                ))}
-              </IndexTable>
-            </LegacyCard>
-          ) : (
-            <EmptyState heading="Connect your wallet" image={walletImage}>
-              <p style={{ marginBottom: '3rem' }}>
-                You need to connect a digital wallet to create your collectibles
-              </p>
-              <ConnectWallet />
-            </EmptyState>
-          )}
-        </Layout.Section>
-      </Layout>
-    </Page>
+      <Layout.Section>
+        <LegacyCard>
+          <IndexTable
+            resourceName={{
+              plural: 'collections',
+              singular: 'collection',
+            }}
+            headings={[
+              { title: 'Name' },
+              { title: 'Description' },
+              { title: 'Symbol' },
+            ]}
+            itemCount={contracts.length}
+            selectable={false}
+            loading={isLoading}
+            emptyState={
+              <EmptySearchResult
+                title={'No collections found'}
+                description={'Get started by creating a collection'}
+                withIllustration
+              />
+            }
+          >
+            {contracts.map(({ address, name, description, symbol }) => (
+              <IndexTable.Row key={address}>
+                <IndexTable.Cell>
+                  <Button
+                    plain
+                    size="slim"
+                    onClick={() => navigate(`/collectibles/${address}`)}
+                  >
+                    {name}
+                  </Button>
+                </IndexTable.Cell>
+                <IndexTable.Cell>{description}</IndexTable.Cell>
+                <IndexTable.Cell>{symbol}</IndexTable.Cell>
+              </IndexTable.Row>
+            ))}
+          </IndexTable>
+        </LegacyCard>
+      </Layout.Section>
+    </ThirdwebLayout>
   );
 }
