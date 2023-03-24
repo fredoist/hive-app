@@ -1,7 +1,6 @@
 import {
   Layout,
   IndexTable,
-  LegacyCard,
   EmptySearchResult,
   Modal,
   TextField,
@@ -10,70 +9,24 @@ import {
   Frame,
   Loading,
   SkeletonPage,
+  AlphaCard,
 } from '@shopify/polaris';
-import { useAddress, useSDK } from '@thirdweb-dev/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useAddress } from '@thirdweb-dev/react';
+import { useState } from 'react';
 import { useNavigate } from '@shopify/app-bridge-react';
+
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout';
+import useCollections from '../../hooks/useCollections';
+import useDeploy from '../../hooks/useDeploy';
+import useModal from '../../hooks/useModal';
 
 export default function CollectiblesPage() {
   const address = useAddress();
-  const sdk = useSDK();
   const navigate = useNavigate();
-  const [contracts, setContracts] = useState([]);
+  const { isLoading: isDeploying, deployCollection } = useDeploy();
+  const { collections, isLoading } = useCollections({ refetch: isDeploying });
   const [collection, setCollection] = useState({ name: '', description: '' });
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeploying, setIsDeploying] = useState(false);
-
-  useEffect(() => {
-    if (!address) return;
-    if (isDeploying) return;
-    async function getContracts() {
-      setIsLoading(true);
-      const contracts = await sdk.getContractList(address);
-      if (!contracts.length) {
-        setIsLoading(false);
-        return;
-      }
-      const collections = contracts.map(async (contract) => {
-        const { name, description, symbol } = await contract.metadata();
-        return {
-          address: contract.address,
-          name,
-          description,
-          symbol,
-        };
-      });
-      Promise.all(collections).then((result) => {
-        setIsLoading(false);
-        setContracts(result);
-      });
-    }
-    getContracts();
-  }, [address, isDeploying]);
-
-  const toggleModal = useCallback(() => setShowModal(!showModal), [showModal]);
-
-  const handleCreateCollection = useCallback(async () => {
-    if (!address) return;
-    if (!collection.name || !collection.description) return;
-    try {
-      setIsDeploying(true);
-      const contract = await sdk.deployer.deployNFTCollection({
-        name: collection.name,
-        description: collection.description,
-        symbol: collection.name.slice(0, 3).toUpperCase(),
-        primary_sale_recipient: address,
-      });
-      setIsDeploying(false);
-      setShowModal(false);
-      navigate(`/collectibles/${contract}`);
-    } catch (error) {
-      console.error(error);
-      setIsDeploying(false);
-    }
-  });
+  const { showModal, toggleModal } = useModal();
 
   if (isLoading) {
     return (
@@ -107,9 +60,12 @@ export default function CollectiblesPage() {
         onClose={toggleModal}
         primaryAction={{
           content: 'Create',
-          onAction: handleCreateCollection,
           loading: isDeploying,
           disabled: isDeploying,
+          onAction: async () => {
+            await deployCollection(collection);
+            toggleModal();
+          },
         }}
       >
         <Modal.Section>
@@ -137,7 +93,7 @@ export default function CollectiblesPage() {
         </Modal.Section>
       </Modal>
       <Layout.Section>
-        <LegacyCard>
+        <AlphaCard padding="0">
           <IndexTable
             resourceName={{
               plural: 'collections',
@@ -148,7 +104,7 @@ export default function CollectiblesPage() {
               { title: 'Description' },
               { title: 'Symbol' },
             ]}
-            itemCount={contracts.length}
+            itemCount={collections.length}
             selectable={false}
             loading={isLoading}
             emptyState={
@@ -159,7 +115,7 @@ export default function CollectiblesPage() {
               />
             }
           >
-            {contracts.map(({ address, name, description, symbol }) => (
+            {collections.map(({ address, name, description, symbol }) => (
               <IndexTable.Row key={address}>
                 <IndexTable.Cell>
                   <Button
@@ -175,7 +131,7 @@ export default function CollectiblesPage() {
               </IndexTable.Row>
             ))}
           </IndexTable>
-        </LegacyCard>
+        </AlphaCard>
       </Layout.Section>
     </ThirdwebLayout>
   );
