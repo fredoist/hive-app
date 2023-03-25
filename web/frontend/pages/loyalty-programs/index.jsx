@@ -17,7 +17,7 @@ export default function LoyaltyProgramsPage() {
   const [campaignType, setCampaignType] = useState('discount')
   const [discount, setDiscount] = useState(20)
   const { collections, isLoading, error } = useCollections({ refetch: false })
-  const [selected, setSelected] = useState()
+  const [selected, setSelected] = useState(collections[0]?.address)
   const fetch = useAuthenticatedFetch()
 
   const handleCampaignTypeChange = useCallback((_, value) => setCampaignType(value), [])
@@ -26,6 +26,7 @@ export default function LoyaltyProgramsPage() {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault()
+      if (!selected || !discount) return alert('Please select a collection and enter a discount')
       const collection = collections.find(({ address }) => address === selected)
       try {
         const req = await fetch('/api/discounts', {
