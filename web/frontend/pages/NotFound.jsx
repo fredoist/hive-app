@@ -1,5 +1,5 @@
-import {EmptyState, LegacyCard, Page} from '@shopify/polaris'
-import {notFoundImage} from '../assets'
+import { EmptyState, LegacyCard, Page } from '@shopify/polaris'
+import { notFoundImage } from '../assets'
 
 export default function NotFound() {
   return (

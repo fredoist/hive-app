@@ -1,11 +1,11 @@
-import {Layout, Page, CalloutCard, Text, Badge} from '@shopify/polaris'
+import { Layout, Page, CalloutCard, Text, Badge } from '@shopify/polaris'
 import {
   collectiblesImage,
   gatedContentImage,
   loyaltyProgramImage,
   rewardCoinsImage
 } from '../assets'
-import {useNavigate} from '@shopify/app-bridge-react'
+import { useNavigate } from '@shopify/app-bridge-react'
 
 export default function HomePage() {
   const navigate = useNavigate()

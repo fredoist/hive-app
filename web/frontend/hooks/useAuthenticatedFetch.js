@@ -1,6 +1,6 @@
-import {authenticatedFetch} from '@shopify/app-bridge-utils'
-import {useAppBridge} from '@shopify/app-bridge-react'
-import {Redirect} from '@shopify/app-bridge/actions'
+import { authenticatedFetch } from '@shopify/app-bridge-utils'
+import { useAppBridge } from '@shopify/app-bridge-react'
+import { Redirect } from '@shopify/app-bridge/actions'
 
 /**
  * A hook that returns an auth-aware fetch function.

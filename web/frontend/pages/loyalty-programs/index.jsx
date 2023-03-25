@@ -1,7 +1,6 @@
 import {
   AlphaCard,
   Button,
-  Form,
   FormLayout,
   Layout,
   RadioButton,
@@ -9,25 +8,25 @@ import {
   Text,
   TextField
 } from '@shopify/polaris'
-import {useCallback, useState} from 'react'
+import { useCallback, useState } from 'react'
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
-import {useAuthenticatedFetch} from '../../hooks/useAuthenticatedFetch'
+import { useAuthenticatedFetch } from '../../hooks/useAuthenticatedFetch'
 import useCollections from '../../hooks/useCollections'
 
 export default function LoyaltyProgramsPage() {
   const [campaignType, setCampaignType] = useState('discount')
   const [discount, setDiscount] = useState(20)
-  const {collections, isLoading, error} = useCollections({refetch: false})
+  const { collections, isLoading, error } = useCollections({ refetch: false })
   const [selected, setSelected] = useState()
   const fetch = useAuthenticatedFetch()
 
   const handleCampaignTypeChange = useCallback((_, value) => setCampaignType(value), [])
-  const handleSelectChange = useCallback(sel => setSelected(sel), [])
+  const handleSelectChange = useCallback((sel) => setSelected(sel), [])
 
   const handleSubmit = useCallback(
-    async e => {
+    async (e) => {
       e.preventDefault()
-      const collection = collections.find(({address}) => address === selected)
+      const collection = collections.find(({ address }) => address === selected)
       try {
         const req = await fetch('/api/discounts', {
           method: 'POST',
@@ -76,7 +75,7 @@ export default function LoyaltyProgramsPage() {
                 label="Apply to collection"
                 helpText="The discount will apply to owners of this collection"
                 value={selected}
-                options={collections.map(({name, address}) => ({
+                options={collections.map(({ name, address }) => ({
                   label: name,
                   value: address
                 }))}

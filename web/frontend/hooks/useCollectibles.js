@@ -1,10 +1,10 @@
-import {useAddress, useContract, useMetadata, useMintNFT, useNFTs} from '@thirdweb-dev/react'
-import {useCallback} from 'react'
+import { useAddress, useContract, useMetadata, useMintNFT, useNFTs } from '@thirdweb-dev/react'
+import { useCallback } from 'react'
 
 export default function useCollectibles(contractId) {
   const address = useAddress()
-  const {contract} = useContract(contractId)
-  const {mutateAsync: mintNFT, isLoading: isDeploying, error: deployError} = useMintNFT(contract)
+  const { contract } = useContract(contractId)
+  const { mutateAsync: mintNFT, isLoading: isDeploying, error: deployError } = useMintNFT(contract)
   const {
     data: collection,
     isLoading: isLoadingCollection,
@@ -17,7 +17,7 @@ export default function useCollectibles(contractId) {
   } = useNFTs(contract)
 
   const addCollectible = useCallback(
-    async ({name, description, image}) => {
+    async ({ name, description, image }) => {
       if (!address) return
       if (!name || !description || !image) return
       try {

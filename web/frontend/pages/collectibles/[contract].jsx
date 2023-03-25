@@ -10,19 +10,19 @@ import {
   TextField,
   Thumbnail
 } from '@shopify/polaris'
-import {useAddress} from '@thirdweb-dev/react'
-import {useCallback, useState} from 'react'
-import {useParams} from 'react-router-dom'
+import { useAddress } from '@thirdweb-dev/react'
+import { useCallback, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
 import useCollectibles from '../../hooks/useCollectibles'
 import useModal from '../../hooks/useModal'
 
 export default function ContractPage() {
-  const {contract} = useParams()
+  const { contract } = useParams()
   const address = useAddress()
-  const {isDeploying, addCollectible, isLoading, error, collection, collectibles} =
+  const { isDeploying, addCollectible, isLoading, error, collection, collectibles } =
     useCollectibles(contract)
-  const {showModal, toggleModal} = useModal()
+  const { showModal, toggleModal } = useModal()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
@@ -101,7 +101,7 @@ export default function ContractPage() {
               plural: 'collectibles',
               singular: 'collectible'
             }}
-            headings={[{title: 'Image'}, {title: 'Name'}, {title: 'Description'}]}
+            headings={[{ title: 'Image' }, { title: 'Name' }, { title: 'Description' }]}
             itemCount={collectibles.length}
             selectable={false}
             emptyState={
@@ -112,7 +112,7 @@ export default function ContractPage() {
               />
             }
           >
-            {collectibles.map(({metadata: {id, name, description, image}}) => (
+            {collectibles.map(({ metadata: { id, name, description, image } }) => (
               <IndexTable.Row key={id}>
                 <IndexTable.Cell>
                   <Thumbnail source={image} alt={name} size="medium" />

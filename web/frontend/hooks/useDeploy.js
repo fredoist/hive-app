@@ -1,5 +1,5 @@
-import {useAddress, useSDK} from '@thirdweb-dev/react'
-import {useCallback, useState} from 'react'
+import { useAddress, useSDK } from '@thirdweb-dev/react'
+import { useCallback, useState } from 'react'
 
 export default function useDeploy() {
   const address = useAddress()
@@ -8,7 +8,7 @@ export default function useDeploy() {
   const [error, setError] = useState(null)
 
   const deployCollection = useCallback(
-    async ({name, description}) => {
+    async ({ name, description }) => {
       if (!address) return
       if (!name || !description) return
       try {
@@ -29,5 +29,5 @@ export default function useDeploy() {
     [address]
   )
 
-  return {deployCollection, isLoading, error}
+  return { deployCollection, isLoading, error }
 }

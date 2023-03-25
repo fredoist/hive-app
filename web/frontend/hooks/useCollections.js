@@ -1,7 +1,7 @@
-import {useAddress, useSDK} from '@thirdweb-dev/react'
-import {useEffect, useState} from 'react'
+import { useAddress, useSDK } from '@thirdweb-dev/react'
+import { useEffect, useState } from 'react'
 
-export default function useCollections({refetch}) {
+export default function useCollections({ refetch }) {
   const address = useAddress()
   const sdk = useSDK()
   const [collections, setCollections] = useState([])
@@ -18,8 +18,8 @@ export default function useCollections({refetch}) {
           setIsLoading(false)
           return
         }
-        const collections = contracts.map(async contract => {
-          const {name, description, symbol} = await contract.metadata()
+        const collections = contracts.map(async (contract) => {
+          const { name, description, symbol } = await contract.metadata()
           return {
             address: contract.address,
             name,
@@ -38,5 +38,5 @@ export default function useCollections({refetch}) {
     getContracts()
   }, [address, sdk, refetch])
 
-  return {collections, isLoading, error}
+  return { collections, isLoading, error }
 }

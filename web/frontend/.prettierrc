@@ -5,8 +5,8 @@
   "printWidth": 100,
   "tabWidth": 2,
   "useTabs": false,
-  "bracketSpacing": false,
-  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "arrowParens": "always",
   "proseWrap": "preserve",
   "endOfLine": "lf"
 }

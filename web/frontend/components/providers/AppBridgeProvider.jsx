@@ -1,7 +1,7 @@
-import {useMemo, useState} from 'react'
-import {useLocation, useNavigate} from 'react-router-dom'
-import {Provider} from '@shopify/app-bridge-react'
-import {Banner, Layout, Page} from '@shopify/polaris'
+import { useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Provider } from '@shopify/app-bridge-react'
+import { Banner, Layout, Page } from '@shopify/polaris'
 
 /**
  * A component to configure App Bridge.
@@ -12,19 +12,19 @@ import {Banner, Layout, Page} from '@shopify/polaris'
  *
  * See: https://shopify.dev/apps/tools/app-bridge/react-components
  */
-export function AppBridgeProvider({children}) {
+export function AppBridgeProvider({ children }) {
   const location = useLocation()
   const navigate = useNavigate()
   const history = useMemo(
     () => ({
-      replace: path => {
-        navigate(path, {replace: true})
+      replace: (path) => {
+        navigate(path, { replace: true })
       }
     }),
     [navigate]
   )
 
-  const routerConfig = useMemo(() => ({history, location}), [history, location])
+  const routerConfig = useMemo(() => ({ history, location }), [history, location])
 
   // The host may be present initially, but later removed by navigation.
   // By caching this in state, we ensure that the host is never lost.
@@ -68,7 +68,7 @@ export function AppBridgeProvider({children}) {
       <Page narrowWidth>
         <Layout>
           <Layout.Section>
-            <div style={{marginTop: '100px'}}>
+            <div style={{ marginTop: '100px' }}>
               <Banner {...bannerProps} status="critical" />
             </div>
           </Layout.Section>
