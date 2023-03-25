@@ -26,6 +26,7 @@ export function useAuthenticatedFetch() {
 }
 
 function checkHeadersForReauthorization(headers, app) {
+  console.error('Error authorizing request.')
   if (headers.get('X-Shopify-API-Request-Failure-Reauthorize') === '1') {
     const authUrlHeader =
       headers.get('X-Shopify-API-Request-Failure-Reauthorize-Url') || `/api/auth`

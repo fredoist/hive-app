@@ -14,6 +14,9 @@ const shopify = shopifyApp({
     path: "/api/auth",
     callbackPath: "/api/auth/callback",
   },
+  webhooks: {
+    path: "/api/webhooks",
+  },
   sessionStorage: new SQLiteSessionStorage(DB_PATH),
 });
 
