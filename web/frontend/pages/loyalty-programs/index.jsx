@@ -15,7 +15,7 @@ import useCollections from '../../hooks/useCollections'
 
 export default function LoyaltyProgramsPage() {
   const [campaignType, setCampaignType] = useState('discount')
-  const [discount, setDiscount] = useState(0)
+  const [discount, setDiscount] = useState(20)
   const {collections, isLoading, error} = useCollections({refetch: false})
   const [selected, setSelected] = useState()
 
@@ -50,7 +50,9 @@ export default function LoyaltyProgramsPage() {
               </FormLayout.Group>
               <FormLayout.Group>
                 <Select
+                  requiredIndicator
                   label="Apply to collection"
+                  helpText="The discount will apply to owners of this collection"
                   value={selected}
                   options={collections.map(({name, address}) => ({
                     label: name,
@@ -59,10 +61,14 @@ export default function LoyaltyProgramsPage() {
                   onChange={handleSelectChange}
                 />
                 <TextField
+                  requiredIndicator
                   type="number"
                   label="Discount percentage"
+                  helpText="A number between 1 and 100"
                   value={discount}
                   onChange={setDiscount}
+                  min={0}
+                  max={100}
                 />
               </FormLayout.Group>
               <Button primary submit>
