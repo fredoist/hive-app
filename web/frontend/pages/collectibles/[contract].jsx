@@ -36,8 +36,8 @@ export default function ContractPage() {
     <ThirdwebLayout
       error={error}
       loading={isLoading}
-      title={`${collection.name}`}
-      subtitle={collection.description}
+      title={`${collection?.name}`}
+      subtitle={collection?.description}
       primaryAction={{
         content: 'Add collectible',
         onAction: toggleModal,
@@ -46,7 +46,7 @@ export default function ContractPage() {
       }}
     >
       <Modal
-        title={`Add collectible to ${collection.name}`}
+        title={`Add collectible to ${collection?.name}`}
         noScroll
         instant
         open={showModal}
@@ -102,7 +102,7 @@ export default function ContractPage() {
               singular: 'collectible'
             }}
             headings={[{ title: 'Image' }, { title: 'Name' }, { title: 'Description' }]}
-            itemCount={collectibles.length}
+            itemCount={collectibles?.length}
             selectable={false}
             emptyState={
               <EmptySearchResult
@@ -112,7 +112,7 @@ export default function ContractPage() {
               />
             }
           >
-            {collectibles.map(({ metadata: { id, name, description, image } }) => (
+            {collectibles?.map(({ metadata: { id, name, description, image } }) => (
               <IndexTable.Row key={id}>
                 <IndexTable.Cell>
                   <Thumbnail source={image} alt={name} size="medium" />
