@@ -1,5 +1,4 @@
 import { BrowserRouter } from 'react-router-dom'
-import { NavigationMenu } from '@shopify/app-bridge-react'
 import Routes from './Routes'
 
 import { AppBridgeProvider, QueryProvider, PolarisProvider } from './components'
@@ -16,18 +15,6 @@ export default function App() {
         <BrowserRouter>
           <AppBridgeProvider>
             <QueryProvider>
-              <NavigationMenu
-                navigationLinks={[
-                  {
-                    label: 'Collectibles',
-                    destination: '/collectibles'
-                  },
-                  {
-                    label: 'Loyalty Programs',
-                    destination: '/loyalty-programs'
-                  }
-                ]}
-              />
               <Routes pages={pages} />
             </QueryProvider>
           </AppBridgeProvider>
