@@ -1,3 +1,6 @@
+import { useAddress } from '@thirdweb-dev/react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Layout,
   IndexTable,
@@ -6,11 +9,11 @@ import {
   TextField,
   AlphaStack,
   Button,
-  AlphaCard
+  AlphaCard,
+  Tag,
+  Tooltip,
+  Toast
 } from '@shopify/polaris'
-import { useAddress } from '@thirdweb-dev/react'
-import { useState } from 'react'
-import { useNavigate } from '@shopify/app-bridge-react'
 
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
 import useCollections from '../../hooks/useCollections'
@@ -21,6 +24,7 @@ export default function CollectiblesPage() {
   const address = useAddress()
   const navigate = useNavigate()
   const [refetch, setRefetch] = useState(false)
+  const [showToast, setShowToast] = useState(false)
   const { isLoading: isDeploying, deployCollection } = useDeploy()
   const { collections, isLoading, error } = useCollections({ refetch })
   const [collection, setCollection] = useState({ name: '', description: '' })
@@ -33,6 +37,7 @@ export default function CollectiblesPage() {
       title="Collectibles"
       subtitle="Reward your customers and collab with other brands by offering
     unique collectibles to your customers."
+      backAction={{ content: 'Back to dashboard', onAction: () => navigate('/') }}
       primaryAction={{
         content: 'Create collection',
         disabled: !address,
@@ -78,6 +83,7 @@ export default function CollectiblesPage() {
           </AlphaStack>
         </Modal.Section>
       </Modal>
+      {showToast ? <Toast content="Copied contract address to clipboard" onDismiss={() => setShowToast(false)} /> : null}
       <Layout.Section>
         <AlphaCard padding="0">
           <IndexTable
@@ -85,7 +91,12 @@ export default function CollectiblesPage() {
               plural: 'collections',
               singular: 'collection'
             }}
-            headings={[{ title: 'Name' }, { title: 'Description' }, { title: 'Symbol' }]}
+            headings={[
+              { title: 'Name' },
+              { title: 'Description' },
+              { title: 'Contract Address' },
+              { title: 'Symbol' }
+            ]}
             itemCount={collections.length}
             selectable={false}
             loading={isLoading}
@@ -105,6 +116,20 @@ export default function CollectiblesPage() {
                   </Button>
                 </IndexTable.Cell>
                 <IndexTable.Cell>{description}</IndexTable.Cell>
+                <IndexTable.Cell>
+                  <Tooltip content="Click to copy">
+                    <Tag
+                      accessibilityLabel="Contract Address"
+                      onClick={async (e) => {
+                        e.preventDefault()
+                        await navigator.clipboard.writeText(address)
+                        setShowToast(true)
+                      }}
+                    >
+                      {address}
+                    </Tag>
+                  </Tooltip>
+                </IndexTable.Cell>
                 <IndexTable.Cell>{symbol}</IndexTable.Cell>
               </IndexTable.Row>
             ))}

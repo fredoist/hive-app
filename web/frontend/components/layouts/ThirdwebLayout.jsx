@@ -25,21 +25,23 @@ export default function ThirdwebLayout(props) {
   }
 
   return (
-    <Page {...props}>
-      <Layout>
-        {address ? (
-          props.children
-        ) : (
-          <Layout.Section>
-            <EmptyState heading="Connect your wallet" image={walletImage}>
-              <p style={{ marginBottom: '3rem' }}>
-                You need to connect a digital wallet to continue.
-              </p>
-              <ConnectWallet colorMode="dark" btnTitle="Connect wallet" />
-            </EmptyState>
-          </Layout.Section>
-        )}
-      </Layout>
-    </Page>
+    <Frame>
+      <Page {...props}>
+        <Layout>
+          {address ? (
+            props.children
+          ) : (
+            <Layout.Section>
+              <EmptyState heading="Connect your wallet" image={walletImage}>
+                <p style={{ marginBottom: '3rem' }}>
+                  You need to connect a digital wallet to continue.
+                </p>
+                <ConnectWallet colorMode="dark" btnTitle="Connect wallet" />
+              </EmptyState>
+            </Layout.Section>
+          )}
+        </Layout>
+      </Page>
+    </Frame>
   )
 }
