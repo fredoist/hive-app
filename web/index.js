@@ -1,44 +1,41 @@
 // @ts-check
-import { join } from 'path';
-import { readFileSync } from 'fs';
-import express from 'express';
-import serveStatic from 'serve-static';
+import { join } from 'path'
+import { readFileSync } from 'fs'
+import express from 'express'
+import serveStatic from 'serve-static'
 
-import shopify from './shopify.js';
+import shopify from './shopify.js'
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000 } = process.env
 
 const STATIC_PATH =
   process.env.NODE_ENV === 'production'
     ? `${process.cwd()}/frontend/dist`
-    : `${process.cwd()}/frontend/`;
+    : `${process.cwd()}/frontend/`
 
-const app = express();
+const app = express()
 
-app.get(shopify.config.auth.path, shopify.auth.begin());
+app.get(shopify.config.auth.path, shopify.auth.begin())
 app.get(
   shopify.config.auth.callbackPath,
   shopify.auth.callback(),
   shopify.redirectToShopifyOrAppRoot()
-);
+)
 
-app.post(
-  shopify.config.webhooks.path,
-  shopify.processWebhooks({ webhookHandlers: {} })
-);
+app.post(shopify.config.webhooks.path, shopify.processWebhooks({ webhookHandlers: {} }))
 
-app.use('/api/*', shopify.validateAuthenticatedSession());
+app.use('/api/*', shopify.validateAuthenticatedSession())
 
-app.use(express.json());
+app.use(express.json())
 
 app.post('/api/discounts', async (req, res) => {
-  const { collection, discount } = req.body;
-  const code = `${collection.address.slice(0,8)}-${discount}`;
-  console.log(collection, discount);
-  const session = res.locals.shopify.session;
+  const { collection, discount } = req.body
+  const code = `${collection.address.slice(0, 8)}-${discount}`
+  console.log(collection, discount)
+  const session = res.locals.shopify.session
   const client = new shopify.api.clients.Graphql({
-    session,
-  });
+    session
+  })
 
   try {
     await client.query({
@@ -88,36 +85,36 @@ app.post('/api/discounts', async (req, res) => {
             title: `${discount} OFF for ${collection.name} owners.`,
             code: code,
             customerSelection: {
-              all: true,
+              all: true
             },
             startsAt: new Date().toISOString(),
             customerGets: {
               value: {
-                percentage: Number(discount / 100),
+                percentage: Number(discount / 100)
               },
               items: {
-                all: true,
-              },
+                all: true
+              }
             },
-            appliesOncePerCustomer: true,
-          },
-        },
-      },
-    });
-    res.status(200).send({ code });
+            appliesOncePerCustomer: true
+          }
+        }
+      }
+    })
+    res.status(200).send({ code })
   } catch (error) {
-    console.log(error);
-    res.status(500).send({ error: error.message || error.toString() });
+    console.log(error)
+    res.status(500).send({ error: error.message || error.toString() })
   }
-});
+})
 
-app.use(serveStatic(STATIC_PATH, { index: false }));
+app.use(serveStatic(STATIC_PATH, { index: false }))
 
 app.use('/*', shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
   return res
     .status(200)
     .set('Content-Type', 'text/html')
-    .send(readFileSync(join(STATIC_PATH, 'index.html')));
-});
+    .send(readFileSync(join(STATIC_PATH, 'index.html')))
+})
 
-app.listen(PORT);
+app.listen(PORT)
