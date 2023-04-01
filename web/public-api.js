@@ -2,7 +2,7 @@ import { createHmac } from 'crypto'
 import cors from 'cors'
 import Web3 from 'web3'
 
-import { getContractAddressesFromGate } from './api/gates.js'
+import { getContractAddressesFromGate, getProductGates } from './api/gates.js'
 
 const web3 = new Web3()
 
@@ -15,6 +15,12 @@ export function configurePublicApi(app) {
   // Configure CORS to allow requests to /public from any origin
   // enables pre-flight requests
   app.options('/public/*', cors(corsOptions))
+
+  app.post('/public/gates', cors(corsOptions), async (req, res) => {
+    const { shopDomain, productGid } = req.body
+    const { requirements, reaction } = await getProductGates({ shopDomain, productGid })
+    res.status(200).send({ requirements, reaction })
+  })
 
   app.post('/public/gateEvaluation', cors(corsOptions), async (req, res) => {
     // evaluate the gate, message, and signature

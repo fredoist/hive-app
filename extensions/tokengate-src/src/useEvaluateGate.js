@@ -27,7 +27,7 @@ const gateContextClient = getGateContextClient({
 
 // Set this to the ngrok url that is generated when you run the server
 export const host = 'https://bc8d-177-228-34-73.ngrok.io';
-if (host == 'https://bc8d-177-228-34-73.ngrok.io') {
+if (host == '') {
   console.error(`
     ************************************************************
     You must set the host to your ngrok url in useEvaluateGate.js.

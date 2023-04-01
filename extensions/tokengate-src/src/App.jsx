@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Tokengate } from '@shopify/tokengate';
 import {
   ConnectButton,
@@ -7,9 +6,10 @@ import {
 } from '@shopify/connect-wallet';
 import { getDefaultConnectors } from '@shopify/connect-wallet';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
+import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { useEvaluateGate } from './useEvaluateGate';
+import { useGates } from './useGates';
 
 const _App = () => {
   const { isLocked, unlockingTokens, evaluateGate, gateEvaluation } =
@@ -19,7 +19,9 @@ const _App = () => {
       evaluateGate(wallet);
     },
   });
-  const { requirements, reaction } = getGate();
+
+  const { requirements, reaction } = useGates()
+  console.log(requirements, reaction)
 
   return (
     <Tokengate
@@ -48,10 +50,8 @@ export const App = () => {
   );
 };
 
-const getGate = () => window.myAppGates?.[0] || {};
-
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet],
+  [polygonMumbai],
   [publicProvider()]
 );
 

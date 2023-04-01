@@ -1,6 +1,18 @@
 import shopify from '../shopify.js'
 import { myAppMetafieldNamespace } from './constants.js'
 
+export async function getProductGates({ shopDomain, productGid }) {
+  const response = await getGatesByShopDomain({ shopDomain, productGid })
+  try {
+    const requirements = JSON.parse(response.product.gates?.[0]?.configuration?.requirements?.value)
+    const reaction = JSON.parse(response.product.gates?.[0]?.configuration?.reaction?.value)
+    return { requirements, reaction }
+  } catch (e) {
+    console.error('error parsing gate requirements', e)
+    return { requirements: null, reaction: null }
+  }
+}
+
 export async function getContractAddressesFromGate({ shopDomain, productGid }) {
   const response = await getGatesByShopDomain({ shopDomain, productGid })
   try {
