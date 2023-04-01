@@ -9,6 +9,8 @@ import retrieveGates from './api/retrieve-gates.js'
 import createGate from './api/create-gate.js';
 import deleteGate from './api/delete-gate.js';
 
+import { configurePublicApi } from './public-api.js'
+
 const { PORT = 3000 } = process.env
 
 const STATIC_PATH =
@@ -28,6 +30,7 @@ app.get(
 app.post(shopify.config.webhooks.path, shopify.processWebhooks({ webhookHandlers: {} }))
 
 app.use(express.json())
+configurePublicApi(app)
 app.use('/api/*', shopify.validateAuthenticatedSession())
 app.get('/api/gates', async (_, res) => {
   try {

@@ -54,8 +54,9 @@ export default defineConfig({
     port: process.env.FRONTEND_PORT,
     hmr: hmrConfig,
     proxy: {
-      '^/(\\?.*)?$': proxyOptions,
-      '^/api(/|(\\?.*)?$)': proxyOptions
-    }
+      "^/(\\?.*)?$": proxyOptions,
+      "^/api(/|(\\?.*)?$)": proxyOptions,
+      "^/public(/|(\\?.*)?$)": proxyOptions,
+    },
   }
 })

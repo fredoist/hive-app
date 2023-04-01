@@ -9,9 +9,16 @@ import { getDefaultConnectors } from '@shopify/connect-wallet';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { useEvaluateGate } from './useEvaluateGate';
 
 const _App = () => {
-  const { wallet } = useConnectWallet();
+  const { isLocked, unlockingTokens, evaluateGate, gateEvaluation } =
+    useEvaluateGate();
+  const { wallet } = useConnectWallet({
+    onConnect: (wallet) => {
+      evaluateGate(wallet);
+    },
+  });
   const { requirements, reaction } = getGate();
 
   return (
@@ -21,8 +28,8 @@ const _App = () => {
       isLoading={false}
       requirements={requirements}
       reaction={reaction}
-      isLocked={true}
-      unlockingTokens={[]}
+      isLocked={isLocked}
+      unlockingTokens={unlockingTokens}
     />
   );
 };
