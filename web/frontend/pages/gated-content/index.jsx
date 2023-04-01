@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
-import { AlphaCard, Layout } from '@shopify/polaris';
+import { Layout } from '@shopify/polaris';
+import { TokengatesList } from '../../components/TokengatesList';
 
 export default function GatedContentPage() {
   const navigate = useNavigate()
@@ -12,13 +13,11 @@ export default function GatedContentPage() {
               and more when they connect their wallet to your store."
       primaryAction={{
         content: 'Create gate',
-        onAction: () => navigate('/gated-content/create'),
+        onAction: () => navigate('/gated-content/create')
       }}
     >
       <Layout.Section>
-        <AlphaCard padding="5">
-          <p>No gates found</p>
-        </AlphaCard>
+        <TokengatesList />
       </Layout.Section>
     </ThirdwebLayout>
   )
