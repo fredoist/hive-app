@@ -1,9 +1,11 @@
 import { createHmac } from 'crypto'
 import cors from 'cors'
 import Web3 from 'web3'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 
 import { getContractAddressesFromGate, getProductGates } from './api/gates.js'
 
+const sdk = new ThirdwebSDK('mumbai')
 const web3 = new Web3()
 
 export function configurePublicApi(app) {
@@ -66,15 +68,20 @@ function getHmac(payload) {
   }
 }
 
-function retrieveUnlockingTokens(address, contractAddresses) {
-  // this could be some lookup against some node or a 3rd party service like Alchemy
-  return Promise.resolve([
-    {
-      name: 'CryptoPunk #1719',
-      imageUrl:
-        'https://storage.cloud.google.com/shopify-blockchain-development/images/punk1719.png',
-      collectionName: 'CryptoPunks',
-      contractAddress: '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB'
-    }
-  ])
+async function retrieveUnlockingTokens(address, contractAddresses) {
+  console.log(address)
+  const contracts = contractAddresses.map(async (contractAddress) => {
+    const contract = await sdk.getContract(contractAddress)
+    const owned = await contract.erc721.getOwned(address)
+    const items = owned.map(async (nft) => ({
+      name: nft.metadata.name,
+      imageUrl: nft.metadata.image,
+      collectionName: (await contract.metadata.get()).name,
+      contractAddress
+    }))
+    return Promise.all(items)
+  })
+  const data = await Promise.all(contracts)
+  console.log(data.flat())
+  return data.flat()
 }
