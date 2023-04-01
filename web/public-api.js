@@ -69,7 +69,6 @@ function getHmac(payload) {
 }
 
 async function retrieveUnlockingTokens(address, contractAddresses) {
-  console.log(address)
   const contracts = contractAddresses.map(async (contractAddress) => {
     const contract = await sdk.getContract(contractAddress)
     const owned = await contract.erc721.getOwned(address)
@@ -82,6 +81,5 @@ async function retrieveUnlockingTokens(address, contractAddresses) {
     return Promise.all(items)
   })
   const data = await Promise.all(contracts)
-  console.log(data.flat())
   return data.flat()
 }
