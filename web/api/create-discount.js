@@ -1,6 +1,6 @@
 import { myAppMetafieldNamespace } from './constants.js'
 
-const YOUR_FUNCTION_ID = 'YOUR_FUNCTION_ID'
+const YOUR_FUNCTION_ID = process.env.SHOPIFY_TOKENGATING_FUNCTION_ID
 
 const DISCOUNT_FUNCTION_QUERY = `
 query discountFunctionQuery {
