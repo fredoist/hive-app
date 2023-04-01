@@ -2,6 +2,9 @@ import { GraphqlQueryError } from '@shopify/shopify-api'
 import shopify from '../shopify.js'
 import { myAppMetafieldNamespace, myAppHandle } from './constants.js'
 import { createAutomaticDiscount } from './create-discount.js'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+
+const sdk = new ThirdwebSDK('mumbai')
 
 const CREATE_GATE_CONFIGURATION_MUTATION = `
 mutation gateConfigurationCreate($name: String!, $requirements: String!, $reaction: String!) {
@@ -138,19 +141,24 @@ export default async function createGate({
 }) {
   const client = new shopify.api.clients.Graphql({ session })
 
-  const segmentConditions = segment.map((address) => {
+  const segmentConditions = segment.map(async (address) => {
+    const contract = await sdk.getContract(address)
+    const metadata = await contract.metadata.get()
+
     return {
-      name: `Gate for ${address.slice(0, 5)}`,
+      name: metadata.name,
       conditionsDescription: 'Any token',
       contractAddress: address,
-      imageUrl: 'https://placekitten.com/g/200/200'
+      imageUrl: metadata.image
     }
   })
 
   const gateConfigurationRequirements = {
     logic: 'ANY',
-    conditions: segmentConditions
+    conditions: await Promise.all(segmentConditions)
   }
+
+  console.log(gateConfigurationRequirements)
 
   const gateConfigurationReaction = {
     name: name,

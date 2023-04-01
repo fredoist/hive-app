@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
-
-// Set this to the ngrok url that is generated when you run the server
-export const host = 'https://379e-177-228-34-73.ngrok.io';
-if (host == '') {
-  console.error(`
-    ************************************************************
-    You must set the host to your ngrok url in useEvaluateGate.js.
-    Run \`npm run dev\` and replace the YOUR_NGROK_URL with the url found in the terminal
-    ************************************************************
-  `);
-}
+import { host } from './useEvaluateGate';
 
 export const useGates = () => {
   const [gates, setGates] = useState({ requirements: null, reaction: null });

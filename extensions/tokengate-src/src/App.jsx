@@ -21,7 +21,6 @@ const _App = () => {
   });
 
   const { requirements, reaction } = useGates()
-  console.log(requirements, reaction)
 
   return (
     <Tokengate
