@@ -52,7 +52,6 @@ export function configurePublicApi(app) {
     }
 
     const response = { gateContext: [getHmac(payload)], unlockingTokens }
-    console.log(response)
     res.status(200).send(response)
   })
 }

@@ -158,8 +158,6 @@ export default async function createGate({
     conditions: await Promise.all(segmentConditions)
   }
 
-  console.log(gateConfigurationRequirements)
-
   const gateConfigurationReaction = {
     name: name,
     type: 'discount',
