@@ -43,6 +43,7 @@ export function TokengatesList() {
 
   const indexTableRow = () => {
     if (!gatesData?.response) return
+    console.log(gatesData.response)
 
     return gatesData.response.map((gate, index) => {
       const { id, name, requirements, reaction, subjectBindings } = gate

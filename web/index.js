@@ -5,6 +5,9 @@ import express from 'express'
 import serveStatic from 'serve-static'
 
 import shopify from './shopify.js'
+import retrieveGates from './api/retrieve-gates.js'
+import createGate from './api/create-gate.js';
+import deleteGate from './api/delete-gate.js';
 
 const { PORT = 3000 } = process.env
 
@@ -24,87 +27,45 @@ app.get(
 
 app.post(shopify.config.webhooks.path, shopify.processWebhooks({ webhookHandlers: {} }))
 
-app.use('/api/*', shopify.validateAuthenticatedSession())
-
 app.use(express.json())
-
-app.post('/api/discounts', async (req, res) => {
-  const { collection, discount } = req.body
-  const code = `${collection.address.slice(0, 8)}-${discount}`
-  console.log(collection, discount)
-  const session = res.locals.shopify.session
-  const client = new shopify.api.clients.Graphql({
-    session
-  })
+app.use('/api/*', shopify.validateAuthenticatedSession())
+app.get('/api/gates', async (_, res) => {
+  try {
+    const response = await retrieveGates(res.locals.shopify.session)
+    res.status(200).send({ success: true, response })
+  } catch (e) {
+    console.error('Failed to process gates/get:', e.message)
+    res.status(500).send({ success: false, error: e.message })
+  }
+})
+app.post('/api/gates', async (req, res) => {
+  const { name, discountType, discount, segment, productGids } = req.body
 
   try {
-    await client.query({
-      data: {
-        query: `mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) {
-      discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) {
-        codeDiscountNode {
-          codeDiscount {
-            ... on DiscountCodeBasic {
-              title
-              codes(first: 10) {
-                nodes {
-                  code
-                }
-              }
-              customerSelection {
-                ... on DiscountCustomerAll {
-                  allCustomers
-                }
-              }
-              startsAt
-              customerGets {
-                value {
-                  ... on DiscountPercentage {
-                    percentage
-                  }
-                }
-                items {
-                  ... on AllDiscountItems {
-                    allItems
-                  }
-                }
-              }
-              appliesOncePerCustomer
-            }
-          }
-        }
-        userErrors {
-          field
-          code
-          message
-        }
-      }
-    }`,
-        variables: {
-          basicCodeDiscount: {
-            title: `${discount} OFF for ${collection.name} owners.`,
-            code: code,
-            customerSelection: {
-              all: true
-            },
-            startsAt: new Date().toISOString(),
-            customerGets: {
-              value: {
-                percentage: Number(discount / 100)
-              },
-              items: {
-                all: true
-              }
-            },
-            appliesOncePerCustomer: true
-          }
-        }
-      }
+    await createGate({
+      session: res.locals.shopify.session,
+      name,
+      discountType,
+      discount,
+      segment,
+      productGids
     })
-    res.status(200).send({ code })
-  } catch (error) {
-    console.log(error)
-    res.status(500).send({ error: error.message || error.toString() })
+    res.status(200).send({ success: true })
+  } catch (e) {
+    console.error('Failed to process gates/create:', e.message)
+    res.status(500).send({ success: false, error: e.message })
+  }
+})
+app.delete('/api/gates/:id', async (req, res) => {
+  try {
+    await deleteGate({
+      session: res.locals.shopify.session,
+      gateConfigurationGid: decodeURIComponent(req.params.id)
+    })
+    res.status(200).send({ success: true })
+  } catch (e) {
+    console.error('Failed to process gates/delete:', e.message)
+    res.status(500).send({ success: false, error: e.message })
   }
 })
 

@@ -1,24 +1,26 @@
 import { useNavigate } from 'react-router-dom'
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
-import { Layout } from '@shopify/polaris';
-import { TokengatesList } from '../../components/TokengatesList';
+import { Page, Layout } from '@shopify/polaris'
 
-export default function GatedContentPage() {
+import { TokengatesList } from '../../components/TokengatesList'
+
+export default function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <ThirdwebLayout
-      title="Gated Content"
-      subtitle="Give collectible holders exclusive access to products, discounts,
-              and more when they connect their wallet to your store."
+    <Page
+      title="Tokengates"
       primaryAction={{
-        content: 'Create gate',
-        onAction: () => navigate('/gated-content/create')
+        content: 'Create tokengate',
+        onAction: () => {
+          navigate('/gated-content/create')
+        }
       }}
     >
-      <Layout.Section>
-        <TokengatesList />
-      </Layout.Section>
-    </ThirdwebLayout>
+      <Layout>
+        <Layout.Section>
+          <TokengatesList />
+        </Layout.Section>
+      </Layout>
+    </Page>
   )
 }
