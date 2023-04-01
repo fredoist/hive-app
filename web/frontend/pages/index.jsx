@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { Layout, Page, CalloutCard, Text, Badge } from '@shopify/polaris'
 import {
   collectiblesImage,
@@ -5,7 +6,6 @@ import {
   loyaltyProgramImage,
   rewardCoinsImage
 } from '../assets'
-import { useNavigate } from '@shopify/app-bridge-react'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -73,7 +73,6 @@ export default function HomePage() {
             primaryAction={{
               content: 'Manage gated content',
               onAction: () => navigate('/gated-content'),
-              disabled: true
             }}
           >
             <p>
