@@ -1,0 +1,25 @@
+<div
+  id="tokengate-hive-app"
+  data-product_id="{{ product.id }}"
+  data-product_gated="true">
+  Tokengating example app block placeholder
+</div>
+<script async type="module" src="{{ "index.js" | asset_url }}"></script>
+<script>
+  window.myAppGates = [{
+    id: "42",
+    name: "My Gate",
+    requirements: {"logic":"ANY","conditions":[{"name":"Gate for 0x01","conditionsDescription":"Any token","contractAddress":"0x01","imageUrl":"https://placekitten.com/g/200/200"}]},
+    reaction: {"name":"Gate for 0x01","type":"discount","discount":{"type":"percentage","value":"10"}}
+    },
+  ];
+</script>
+
+{% schema %}
+  {
+    "name": "Tokengate",
+    "target": "section",
+    "templates": ["product"],
+    "settings": []
+  }
+{% endschema %}
