@@ -1,0 +1,39 @@
+query Input {
+  cart {
+    attribute(key: "_shopify_gate_context") {
+      value
+    }
+    lines {
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          product {
+            id
+            gates {
+              id
+              configuration(appId: "hive-app") {
+                id
+                metafield(
+                  namespace: "hive-app"
+                  key: "reaction"
+                ) {
+                  value
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  discountNode {
+    metafield(
+      namespace: "hive-app"
+      key: "gate_configuration_id"
+    ) {
+      value
+    }
+  }
+}
