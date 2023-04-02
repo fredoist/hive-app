@@ -9,7 +9,7 @@ processes = []
 [env]
   PORT = "8081"
   HOST = "https://hive-app.fly.dev"
-  SHOPIFY_API_KEY="9235385445864a02640c86a6e3103360"
+  SHOPIFY_API_KEY="9eae818f7bb442ff0ff3aff204aa0b39"
   SCOPES="read_products,write_products,read_discounts,write_discounts,read_gates,write_gates"
 
 [experimental]
