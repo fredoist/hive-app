@@ -58,7 +58,7 @@ export function configurePublicApi(app) {
 
 function getHmac(payload) {
   const hmacMessage = payload.id
-  const hmac = createHmac('sha256', 'secret-key')
+  const hmac = createHmac('sha256', '0b563729acf5dcd71e56fb4a4b97bbf31f43')
   hmac.update(hmacMessage)
   const hmacDigest = hmac.digest('hex')
   return {

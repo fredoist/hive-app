@@ -13,7 +13,7 @@ export async function getProductGates({ shopDomain, productGid }) {
     return gates
   } catch (e) {
     console.error('error parsing gate requirements', e)
-    return { requirements: null, reaction: null }
+    return []
   }
 }
 
