@@ -73,13 +73,13 @@ export default function CollectiblesPage() {
                   ) : null
                 }
               >
-                {collections.map(({ address, name, description, symbol }) => (
-                  <IndexTable.Row key={address}>
+                {collections.map(({ address: collectionAddress, name, description, symbol }) => (
+                  <IndexTable.Row key={collectionAddress}>
                     <IndexTable.Cell>
                       <Button
                         plain
                         size="slim"
-                        onClick={() => navigate(`/collectibles/${address}`)}
+                        onClick={() => navigate(`/collectibles/${collectionAddress}`)}
                       >
                         {name}
                       </Button>
@@ -91,7 +91,7 @@ export default function CollectiblesPage() {
                           accessibilityLabel="Contract Address"
                           onClick={async (e) => {
                             e.preventDefault()
-                            await navigator.clipboard.writeText(address)
+                            await navigator.clipboard.writeText(collectionAddress)
                             setShowToast(true)
                           }}
                         >
@@ -102,7 +102,7 @@ export default function CollectiblesPage() {
                     <IndexTable.Cell>{symbol}</IndexTable.Cell>
                     <IndexTable.Cell>
                       <a
-                        href={`https://testnets.opensea.io/assets/mumbai/${address}`}
+                        href={`https://testnets.opensea.io/assets/mumbai/${collectionAddress}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="View on OpenSea"
