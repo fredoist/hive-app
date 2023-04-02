@@ -39,7 +39,7 @@ export const useEvaluateGate = () => {
         body: JSON.stringify({
           productId,
           productGid: `gid://shopify/Product/${productId}`,
-          gateConfigurationGid: `gid://shopify/GateConfiguration/${gate.id}`,
+          gateConfigurationGid: gate.id,
           shopDomain: getShopDomain(),
           address,
           message,

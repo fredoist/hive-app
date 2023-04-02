@@ -5,7 +5,7 @@ export async function getProductGates({ shopDomain, productGid }) {
   const response = await getGatesByShopDomain({ shopDomain, productGid })
   try {
     const gates = response.product.gates?.map((gate) => ({
-      id: gate.id,
+      id: gate.configuration.id,
       name: gate.configuration.name,
       requirements: JSON.parse(gate.configuration.requirements.value),
       reaction: JSON.parse(gate.configuration.reaction.value)
