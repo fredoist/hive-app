@@ -41,7 +41,7 @@ export default function ContractPage() {
       subtitle={collection?.description}
       primaryAction={{
         content: 'Add collectible',
-        onAction: toggleModal,
+        onAction: () => toggleModal(true),
         disabled: !address,
         helpText: !address && 'Connect your wallet to add a collectible'
       }}
@@ -57,7 +57,7 @@ export default function ContractPage() {
             noScroll
             instant
             open={showModal}
-            onClose={toggleModal}
+            onClose={() => toggleModal(false)}
             primaryAction={{
               content: 'Add collectible',
               onAction: async () => {
@@ -66,7 +66,7 @@ export default function ContractPage() {
                   description,
                   image
                 })
-                toggleModal()
+                toggleModal(false)
               },
               loading: isDeploying,
               disabled: isDeploying
