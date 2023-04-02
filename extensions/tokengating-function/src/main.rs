@@ -14,7 +14,7 @@ generate_types!(
     schema_path = "./schema.graphql"
 );
 
-const SECRET_KEY: &str = "secret-key"; // This should be a secret key that is shared between the app and the function
+const SECRET_KEY: &str = "api-secret-key";
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct GateContextItem {

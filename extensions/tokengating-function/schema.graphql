@@ -24,7 +24,7 @@ type Attribute {
 }
 
 """
-Represents information about the buyer that is interacting with the cart.
+Represents information about the buyer that is interacting with the cart. Only set when the buyer is logged in.
 """
 type BuyerIdentity {
   """
@@ -71,6 +71,11 @@ type Cart {
   The costs that the buyer will pay at checkout.
   """
   cost: CartCost!
+
+  """
+  A list of lines containing information about the items that can be delivered.
+  """
+  deliverableLines: [DeliverableCartLine!]!
 
   """
   The delivery groups available for the cart based on the buyer's shipping address.
@@ -1736,10 +1741,7 @@ enum CurrencyCode {
   """
   Belarusian Ruble (BYR).
   """
-  BYR
-    @deprecated(
-      reason: "`BYR` is deprecated. Use `BYN` available from version `2021-01` onwards instead."
-    )
+  BYR @deprecated(reason: "`BYR` is deprecated. Use `BYN` available from version `2021-01` onwards instead.")
 
   """
   Belize Dollar (BZD).
@@ -2264,10 +2266,7 @@ enum CurrencyCode {
   """
   Sao Tome And Principe Dobra (STD).
   """
-  STD
-    @deprecated(
-      reason: "`STD` is deprecated. Use `STN` available from version `2022-07` onwards instead."
-    )
+  STD @deprecated(reason: "`STD` is deprecated. Use `STN` available from version `2022-07` onwards instead.")
 
   """
   Sao Tome And Principe Dobra (STN).
@@ -2362,10 +2361,7 @@ enum CurrencyCode {
   """
   Venezuelan Bolivares (VEF).
   """
-  VEF
-    @deprecated(
-      reason: "`VEF` is deprecated. Use `VES` available from version `2020-10` onwards instead."
-    )
+  VEF @deprecated(reason: "`VEF` is deprecated. Use `VES` available from version `2020-10` onwards instead.")
 
   """
   Venezuelan Bolivares (VES).
@@ -2522,6 +2518,38 @@ A signed decimal number, which supports arbitrary precision and is serialized as
 Example values: `"29.99"`, `"29.999"`.
 """
 scalar Decimal
+
+"""
+Represents information about the merchandise in the cart.
+"""
+type DeliverableCartLine {
+  """
+  Retrieve a cart line attribute by key.
+
+  Cart line attributes are also known as line item properties in Liquid.
+  """
+  attribute(
+    """
+    The key of the attribute to retrieve.
+    """
+    key: String
+  ): Attribute
+
+  """
+  The ID of the cart line.
+  """
+  id: ID!
+
+  """
+  The merchandise that the buyer intends to purchase.
+  """
+  merchandise: Merchandise!
+
+  """
+  The quantity of the merchandise that the customer intends to purchase.
+  """
+  quantity: Int!
+}
 
 """
 List of different delivery method types.
@@ -2685,7 +2713,12 @@ type GateSubject {
   """
   The bound gate configuration.
   """
-  configuration: GateConfiguration!
+  configuration(
+    """
+    The appId of the gate configurations to search for.
+    """
+    appId: String
+  ): GateConfiguration!
 
   """
   The ID of the gate subject.
@@ -3489,6 +3522,11 @@ type Localization {
   The language of the active localized experience.
   """
   language: Language!
+
+  """
+  The market of the active localized experience.
+  """
+  market: Market!
 }
 
 """
@@ -3531,16 +3569,6 @@ type MailingAddress {
   lastName: String
 
   """
-  The approximate latitude of the address.
-  """
-  latitude: Float
-
-  """
-  The approximate longitude of the address.
-  """
-  longitude: Float
-
-  """
   The full name of the customer, based on firstName and lastName.
   """
   name: String
@@ -3559,6 +3587,71 @@ type MailingAddress {
   The zip or postal code of the address.
   """
   zip: String
+}
+
+"""
+A market is a group of one or more regions that you want to target for international sales.
+By creating a market, you can configure a distinct, localized shopping experience for
+customers from a specific area of the world. For example, you can
+[change currency](https://shopify.dev/api/admin-graphql/current/mutations/marketCurrencySettingsUpdate),
+[configure international pricing](https://shopify.dev/api/examples/product-price-lists),
+or [add market-specific domains or subfolders](https://shopify.dev/api/admin-graphql/current/objects/MarketWebPresence).
+"""
+type Market implements HasMetafields {
+  """
+  A human-readable unique string for the market automatically generated from its title.
+  """
+  handle: String!
+
+  """
+  A globally-unique identifier.
+  """
+  id: ID!
+
+  """
+  Returns a metafield by namespace and key that belongs to the resource.
+  """
+  metafield(
+    """
+    The key for the metafield.
+    """
+    key: String!
+
+    """
+    The namespace for the metafield.
+    """
+    namespace: String!
+  ): Metafield
+
+  """
+  A geographic region which comprises a market.
+  """
+  regions: [MarketRegion!]!
+}
+
+"""
+Represents a region.
+"""
+interface MarketRegion {
+  """
+  The name of the region in the language of the current localization.
+  """
+  name: String
+}
+
+"""
+A country which comprises a market.
+"""
+type MarketRegionCountry implements MarketRegion {
+  """
+  The two-letter code for the country.
+  """
+  code: CountryCode!
+
+  """
+  The country name in the language of the current localization.
+  """
+  name: String!
 }
 
 """
