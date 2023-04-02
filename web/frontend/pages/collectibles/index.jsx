@@ -1,141 +1,127 @@
-import { useAddress } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress } from '@thirdweb-dev/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Layout,
   IndexTable,
   EmptySearchResult,
-  Modal,
-  TextField,
-  AlphaStack,
   Button,
   AlphaCard,
   Tag,
   Tooltip,
-  Toast
+  Toast,
+  Page,
+  EmptyState
 } from '@shopify/polaris'
 
-import ThirdwebLayout from '../../components/layouts/ThirdwebLayout'
 import useCollections from '../../hooks/useCollections'
-import useDeploy from '../../hooks/useDeploy'
-import useModal from '../../hooks/useModal'
+import CreateCollectionModal from '../../components/CreateCollectionModal'
+import { openSeaIcon, walletImage } from '../../assets'
 
 export default function CollectiblesPage() {
   const address = useAddress()
   const navigate = useNavigate()
-  const [refetch, setRefetch] = useState(false)
   const [showToast, setShowToast] = useState(false)
-  const { isLoading: isDeploying, deployCollection } = useDeploy()
-  const { collections, isLoading, error } = useCollections({ refetch })
-  const [collection, setCollection] = useState({ name: '', description: '' })
-  const { showModal, toggleModal } = useModal()
+  const [showModal, toggleModal] = useState(false)
+  const { collections, isLoading, error } = useCollections({ showModal })
 
   return (
-    <ThirdwebLayout
-      error={error}
-      loading={isLoading}
+    <Page
       title="Collectibles"
       subtitle="Reward your customers and collab with other brands by offering
     unique collectibles to your customers."
-      backAction={{ content: 'Back to dashboard', onAction: () => navigate('/') }}
       primaryAction={{
         content: 'Create collection',
         disabled: !address,
-        onAction: toggleModal,
+        onAction: () => toggleModal(true),
         helpText: !address && 'You need to connect a digital wallet to create your collectibles'
       }}
     >
-      <Modal
-        small
-        title="Create a collection"
-        noScroll
-        instant
-        open={showModal}
-        onClose={toggleModal}
-        primaryAction={{
-          content: 'Create',
-          loading: isDeploying,
-          disabled: isDeploying,
-          onAction: async () => {
-            await deployCollection(collection)
-            toggleModal()
-            setRefetch(!refetch)
-          }
-        }}
-      >
-        <Modal.Section>
-          <AlphaStack gap="5">
-            <TextField
-              type="text"
-              label="Name"
-              disabled={isDeploying}
-              value={collection.name}
-              requiredIndicator
-              onChange={(value) => setCollection({ ...collection, name: value })}
+      {address ? (
+        <Layout>
+          <CreateCollectionModal open={showModal} toggleModal={toggleModal} />
+          {showToast ? (
+            <Toast
+              content="Copied contract address to clipboard"
+              onDismiss={() => setShowToast(false)}
             />
-            <TextField
-              type="text"
-              label="Description"
-              disabled={isDeploying}
-              value={collection.description}
-              onChange={(value) => setCollection({ ...collection, description: value })}
-            />
-          </AlphaStack>
-        </Modal.Section>
-      </Modal>
-      {showToast ? <Toast content="Copied contract address to clipboard" onDismiss={() => setShowToast(false)} /> : null}
-      <Layout.Section>
-        <AlphaCard padding="0">
-          <IndexTable
-            resourceName={{
-              plural: 'collections',
-              singular: 'collection'
-            }}
-            headings={[
-              { title: 'Name' },
-              { title: 'Description' },
-              { title: 'Contract Address' },
-              { title: 'Symbol' }
-            ]}
-            itemCount={collections.length}
-            selectable={false}
-            loading={isLoading}
-            emptyState={
-              <EmptySearchResult
-                title={'No collections found'}
-                description={'Get started by creating a collection'}
-                withIllustration
-              />
-            }
-          >
-            {collections.map(({ address, name, description, symbol }) => (
-              <IndexTable.Row key={address}>
-                <IndexTable.Cell>
-                  <Button plain size="slim" onClick={() => navigate(`/collectibles/${address}`)}>
-                    {name}
-                  </Button>
-                </IndexTable.Cell>
-                <IndexTable.Cell>{description}</IndexTable.Cell>
-                <IndexTable.Cell>
-                  <Tooltip content="Click to copy">
-                    <Tag
-                      accessibilityLabel="Contract Address"
-                      onClick={async (e) => {
-                        e.preventDefault()
-                        await navigator.clipboard.writeText(address)
-                        setShowToast(true)
-                      }}
-                    >
-                      {address}
-                    </Tag>
-                  </Tooltip>
-                </IndexTable.Cell>
-                <IndexTable.Cell>{symbol}</IndexTable.Cell>
-              </IndexTable.Row>
-            ))}
-          </IndexTable>
-        </AlphaCard>
-      </Layout.Section>
-    </ThirdwebLayout>
+          ) : null}
+          <Layout.Section>
+            <AlphaCard padding="0">
+              <IndexTable
+                resourceName={{
+                  plural: 'collections',
+                  singular: 'collection'
+                }}
+                headings={[
+                  { title: 'Name' },
+                  { title: 'Description' },
+                  { title: 'Contract Address' },
+                  { title: 'Symbol' },
+                  { title: 'Links' }
+                ]}
+                itemCount={collections.length}
+                selectable={false}
+                loading={isLoading}
+                emptyState={
+                  !isLoading ? (
+                    <EmptySearchResult
+                      title={'No collections found'}
+                      description={'Get started by creating a collection'}
+                      withIllustration
+                    />
+                  ) : null
+                }
+              >
+                {collections.map(({ address, name, description, symbol }) => (
+                  <IndexTable.Row key={address}>
+                    <IndexTable.Cell>
+                      <Button
+                        plain
+                        size="slim"
+                        onClick={() => navigate(`/collectibles/${address}`)}
+                      >
+                        {name}
+                      </Button>
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>{description}</IndexTable.Cell>
+                    <IndexTable.Cell>
+                      <Tooltip content="Click to copy">
+                        <Tag
+                          accessibilityLabel="Contract Address"
+                          onClick={async (e) => {
+                            e.preventDefault()
+                            await navigator.clipboard.writeText(address)
+                            setShowToast(true)
+                          }}
+                        >
+                          {address}
+                        </Tag>
+                      </Tooltip>
+                    </IndexTable.Cell>
+                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
+                    <IndexTable.Cell>
+                      <a
+                        href={`https://testnets.opensea.io/assets/mumbai/${address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="View on OpenSea"
+                      >
+                        <img src={openSeaIcon} width={24} alt="OpenSea Marketplace" />
+                      </a>
+                    </IndexTable.Cell>
+                  </IndexTable.Row>
+                ))}
+              </IndexTable>
+            </AlphaCard>
+          </Layout.Section>
+        </Layout>
+      ) : (
+        <EmptyState heading="Connect your wallet" image={walletImage}>
+          <p style={{ marginBottom: '3rem' }}>You need to connect a digital wallet to continue.</p>
+          <ConnectWallet theme="light" btnTitle="Connect wallet" />
+        </EmptyState>
+      )}
+    </Page>
   )
 }
