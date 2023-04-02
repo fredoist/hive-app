@@ -31,6 +31,7 @@ export const useEvaluateGate = () => {
   const productId = getProductId();
   const evaluateGate = useCallback(
     async ({ address, message, signature }) => {
+      if (!gate) return
       const response = await fetch(`${host}/public/gateEvaluation`, {
         method: 'POST',
         headers: {

@@ -1,17 +1,22 @@
 <div id="tokengate-hive-app" data-product_id="{{ product.id }}"></div>
 <script async type="module">
-  const req = await fetch('https://d169-177-228-34-73.ngrok.io/public/gates', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      productGid: `gid://shopify/Product/{{ product.id }}`,
-      shopDomain: '{{ shop.domain }}',
-    }),
-  });
-  const gates = await req.json()
-  window.myAppGates = gates
+  try {
+    const req = await fetch('https://d169-177-228-34-73.ngrok.io/public/gates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productGid: `gid://shopify/Product/{{ product.id }}`,
+        shopDomain: '{{ shop.domain }}',
+      }),
+    });
+    const gates = await req.json()
+    window.myAppGates = gates
+  } catch (e) {
+    console.error('Error fetching gates', e)
+    window.myAppGates = []
+  }
 </script>
 <script async type="module" src="{{ "index.js" | asset_url }}"></script>
 

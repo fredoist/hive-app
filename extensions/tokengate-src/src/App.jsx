@@ -15,22 +15,20 @@ const _App = () => {
   const { isLocked, unlockingTokens, evaluateGate } = useEvaluateGate();
   const [requirements, setRequirements] = useState(null);
   const [reaction, setReaction] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const { requirements, reaction } = getGate();
     setRequirements(requirements);
     setReaction(reaction);
     setLoading(false);
-  }, []);
+  }, [window.myAppGates]);
 
   const { wallet } = useConnectWallet({
     onConnect: (wallet) => {
       evaluateGate(wallet);
     },
   });
-
-  if (!requirements || !reaction) return null;
 
   return (
     <Tokengate
