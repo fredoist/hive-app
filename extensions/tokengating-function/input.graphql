@@ -13,7 +13,7 @@ query Input {
             id
             gates {
               id
-              configuration(appId: "hive-app") {
+              configuration {
                 id
                 metafield(
                   namespace: "hive-app"

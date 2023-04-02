@@ -14,7 +14,7 @@ generate_types!(
     schema_path = "./schema.graphql"
 );
 
-const SECRET_KEY: &str = "api-secret-key";
+const SECRET_KEY: &str = "0b563729acf5dcd71e56fb4a4b97bbf31f43";
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct GateContextItem {
