@@ -4,9 +4,13 @@ import { myAppMetafieldNamespace } from './constants.js'
 export async function getProductGates({ shopDomain, productGid }) {
   const response = await getGatesByShopDomain({ shopDomain, productGid })
   try {
-    const requirements = JSON.parse(response.product.gates?.[0]?.configuration?.requirements?.value)
-    const reaction = JSON.parse(response.product.gates?.[0]?.configuration?.reaction?.value)
-    return { requirements, reaction }
+    const gates = response.product.gates?.map((gate) => ({
+      id: gate.id,
+      name: gate.configuration.name,
+      requirements: JSON.parse(gate.configuration.requirements.value),
+      reaction: JSON.parse(gate.configuration.reaction.value)
+    }))
+    return gates
   } catch (e) {
     console.error('error parsing gate requirements', e)
     return { requirements: null, reaction: null }

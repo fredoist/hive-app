@@ -9,24 +9,34 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { useEvaluateGate } from './useEvaluateGate';
-import { useGates } from './useGates';
+import { useEffect, useState } from 'react';
 
 const _App = () => {
   const { isLocked, unlockingTokens, evaluateGate } = useEvaluateGate();
+  const [requirements, setRequirements] = useState(null);
+  const [reaction, setReaction] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const { requirements, reaction } = getGate();
+    setRequirements(requirements);
+    setReaction(reaction);
+    setLoading(false);
+  }, []);
+
   const { wallet } = useConnectWallet({
     onConnect: (wallet) => {
       evaluateGate(wallet);
     },
   });
 
-  const { requirements, reaction, loading } = useGates();
-  if(!requirements || !reaction) return null;
+  if (!requirements || !reaction) return null;
 
   return (
     <Tokengate
       isConnected={Boolean(wallet)}
       connectButton={<ConnectButton />}
-      isLoading={loading}
+      loading={loading}
       requirements={requirements}
       reaction={reaction}
       isLocked={isLocked}
@@ -48,6 +58,8 @@ export const App = () => {
     </WagmiConfig>
   );
 };
+
+const getGate = () => window.myAppGates?.[0] || {};
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygonMumbai],

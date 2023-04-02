@@ -23,7 +23,7 @@ const gateContextClient = getGateContextClient({
   },
 });
 
-export const host = import.meta.env.PROD ? 'https://hive-app.fly.dev' : '';
+export const host = 'https://d169-177-228-34-73.ngrok.io';
 
 export const useEvaluateGate = () => {
   const gate = getGate();

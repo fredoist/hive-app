@@ -20,8 +20,8 @@ export function configurePublicApi(app) {
 
   app.post('/public/gates', cors(corsOptions), async (req, res) => {
     const { shopDomain, productGid } = req.body
-    const { requirements, reaction } = await getProductGates({ shopDomain, productGid })
-    res.status(200).send({ requirements, reaction })
+    const gates = await getProductGates({ shopDomain, productGid })
+    res.status(200).send(gates)
   })
 
   app.post('/public/gateEvaluation', cors(corsOptions), async (req, res) => {
