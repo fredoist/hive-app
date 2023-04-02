@@ -38,7 +38,6 @@ export default function HomePage() {
             illustration={rewardCoinsImage}
             primaryAction={{
               content: 'Manage reward coins',
-              onAction: () => navigate('/reward-coins'),
               disabled: true,
               helpText: 'Coming soon'
             }}
@@ -51,33 +50,33 @@ export default function HomePage() {
         </Layout.Section>
         <Layout.Section oneHalf>
           <CalloutCard
-            title="Loyalty Programs"
-            illustration={loyaltyProgramImage}
-            primaryAction={{
-              content: 'Manage loyalty programs',
-              onAction: () => navigate('/loyalty-programs')
-            }}
-          >
-            <p>
-              Reward your customers at different stages of their journey, from initial free “drops”
-              to claiming rewards at checkout.
-            </p>
-          </CalloutCard>
-          <CalloutCard
-            title={
-              <Text variant="headingMd">
-                Gated content <Badge>Work in progress</Badge>
-              </Text>
-            }
+            title="Gated Content"
             illustration={gatedContentImage}
             primaryAction={{
               content: 'Manage gated content',
-              onAction: () => navigate('/gated-content'),
+              onAction: () => navigate('/gated-content')
             }}
           >
             <p>
               Give collectible holders exclusive access to products, discounts, and more when they
               connect their wallet to your store.
+            </p>
+          </CalloutCard>
+          <CalloutCard
+            title={
+              <Text variant="headingMd">
+                Loyalty Programs <Badge>Work in progress</Badge>
+              </Text>
+            }
+            illustration={loyaltyProgramImage}
+            primaryAction={{
+              content: 'Manage loyalty programs',
+              disabled: true
+            }}
+          >
+            <p>
+              Reward your customers at different stages of their journey, from initial free “drops”
+              to claiming rewards at checkout.
             </p>
           </CalloutCard>
         </Layout.Section>

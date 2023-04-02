@@ -3,10 +3,9 @@ import Routes from './Routes'
 
 import { AppBridgeProvider, QueryProvider, PolarisProvider } from './components'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { NavigationMenu } from '@shopify/app-bridge-react'
 
 export default function App() {
-  // Any .tsx or .jsx files in /pages will become a route
-  // See documentation for <Routes /> for more info
   const pages = import.meta.globEager('./pages/**/!(*.test.[jt]sx)*.([jt]sx)')
 
   return (
@@ -15,6 +14,26 @@ export default function App() {
         <BrowserRouter>
           <AppBridgeProvider>
             <QueryProvider>
+              <NavigationMenu
+                navigationLinks={[
+                  {
+                    label: 'Collectibles',
+                    url: '/collectibles'
+                  },
+                  // {
+                  //   label: 'Loyalty Programs',
+                  //   url: '/loyalty-programs'
+                  // },
+                  // {
+                  //   label: 'Reward Coins',
+                  //   url: '/reward-coins'
+                  // },
+                  {
+                    label: 'Gated Content',
+                    url: '/gated-content'
+                  }
+                ]}
+              />
               <Routes pages={pages} />
             </QueryProvider>
           </AppBridgeProvider>
