@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { host } from './useEvaluateGate';
 
 export const useGates = () => {
-  const [gates, setGates] = useState({ requirements: null, reaction: null });
+  const [requirements, setRequirements] = useState(null);
+  const [reaction, setReaction] = useState(null);
+  const [loading, setLoading] = useState(true);
   const productId = getProductId();
   useEffect(() => {
     async function fetchGates() {
+      setLoading(true);
       const response = await fetch(`${host}/public/gates`, {
         method: 'POST',
         headers: {
@@ -17,12 +20,14 @@ export const useGates = () => {
         }),
       });
       const { requirements, reaction } = await response.json();
-      setGates({ requirements, reaction });
+      setRequirements(requirements);
+      setReaction(reaction);
+      setLoading(false);
     }
     fetchGates();
   }, []);
 
-  return gates;
+  return { requirements, reaction, loading };
 };
 
 function getShopDomain() {

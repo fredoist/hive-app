@@ -1,7 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import {
-  getGateContextClient,
-} from "@shopify/gate-context-client";
+import { getGateContextClient } from '@shopify/gate-context-client';
 
 const gateContextClient = getGateContextClient({
   backingStore: 'ajaxApi',
@@ -25,16 +23,7 @@ const gateContextClient = getGateContextClient({
   },
 });
 
-// Set this to the ngrok url that is generated when you run the server
-export const host = 'https://fceb-177-228-34-73.ngrok.io';
-if (host == '') {
-  console.error(`
-    ************************************************************
-    You must set the host to your ngrok url in useEvaluateGate.js.
-    Run \`npm run dev\` and replace the YOUR_NGROK_URL with the url found in the terminal
-    ************************************************************
-  `);
-}
+export const host = import.meta.env.PROD ? 'https://hive-app.fly.dev' : '';
 
 export const useEvaluateGate = () => {
   const gate = getGate();

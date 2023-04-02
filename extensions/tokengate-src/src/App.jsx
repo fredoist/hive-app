@@ -12,21 +12,21 @@ import { useEvaluateGate } from './useEvaluateGate';
 import { useGates } from './useGates';
 
 const _App = () => {
-  const { isLocked, unlockingTokens, evaluateGate, gateEvaluation } =
-    useEvaluateGate();
+  const { isLocked, unlockingTokens, evaluateGate } = useEvaluateGate();
   const { wallet } = useConnectWallet({
     onConnect: (wallet) => {
       evaluateGate(wallet);
     },
   });
 
-  const { requirements, reaction } = useGates()
+  const { requirements, reaction, loading } = useGates();
+  if(!requirements || !reaction) return null;
 
   return (
     <Tokengate
       isConnected={Boolean(wallet)}
       connectButton={<ConnectButton />}
-      isLoading={false}
+      isLoading={loading}
       requirements={requirements}
       reaction={reaction}
       isLocked={isLocked}
