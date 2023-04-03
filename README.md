@@ -16,3 +16,15 @@ The following features are supported:
 ### Demo video
 
 [![fredoist/hive-app: Token gated experiences inside Shopify using Thirdweb SDK and Shopify Gates API. - 2 April 2023](https://cdn.loom.com/sessions/thumbnails/6bc5a87cd12f4ab39d07866c242f9fe0-with-play.gif)](https://www.loom.com/share/6bc5a87cd12f4ab39d07866c242f9fe0)
+
+### Installation
+
+> ⚠️ App is not working correctly in production because of an issue with the global setting in vite, and the `@safe-global/ethers` dependeby by thirdweb sdk, I'm trying to fix the issue. Meanwhile you can try the app in dev mode. Follow the steps below.
+
+- Clone the repository
+- Run `npm install` on root directory.
+- Run `npm run deploy` and follow the instructions to create a shopify app and push the extensions.
+- Copy your `FUNCTION_ID` env variable and paste it inside `web/api/create-discount.js`
+- Run `npm run dev`
+- Replace the host variable for your ngrok.io tunnel on `extensions/tokengate-src/useEvaluateGate.js`, `extensions/tokengate/blocks/app-block.liquid`.
+- Run `npm run build --prefix extensions/tokengate-src`
