@@ -17,9 +17,10 @@ The following features are supported:
 
 [![fredoist/hive-app: Token gated experiences inside Shopify using Thirdweb SDK and Shopify Gates API. - 2 April 2023](https://cdn.loom.com/sessions/thumbnails/6bc5a87cd12f4ab39d07866c242f9fe0-with-play.gif)](https://www.loom.com/share/6bc5a87cd12f4ab39d07866c242f9fe0)
 
-### Installation
+Try it yourself: https://hive-app-store-demo.myshopify.com/products/the-collection-snowboard-liquid
+Try the app at: https://hive-app-landing.fredoist.repl.co/
 
-> ⚠️ App is not working correctly in production because of an issue with the global setting in vite, and the `@safe-global/ethers` dependeby by thirdweb sdk, I'm trying to fix the issue. Meanwhile you can try the app in dev mode. Follow the steps below.
+### Installation
 
 - Clone the repository
 - Run `npm install` on root directory.
