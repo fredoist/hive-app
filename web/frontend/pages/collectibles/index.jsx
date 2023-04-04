@@ -11,7 +11,8 @@ import {
   Tooltip,
   Toast,
   Page,
-  EmptyState
+  EmptyState,
+  Frame
 } from '@shopify/polaris'
 
 import useCollections from '../../hooks/useCollections'
@@ -23,105 +24,107 @@ export default function CollectiblesPage() {
   const navigate = useNavigate()
   const [showToast, setShowToast] = useState(false)
   const [showModal, toggleModal] = useState(false)
-  const { collections, isLoading, error } = useCollections({ showModal })
+  const { collections, isLoading } = useCollections({ showModal })
 
   return (
-    <Page
-      title="Collectibles"
-      subtitle="Reward your customers and collab with other brands by offering
+    <Frame>
+      <Page
+        title="Collectibles"
+        subtitle="Reward your customers and collab with other brands by offering
     unique collectibles to your customers."
-      primaryAction={{
-        content: 'Create collection',
-        disabled: !address,
-        onAction: () => toggleModal(true),
-        helpText: !address && 'You need to connect a digital wallet to create your collectibles'
-      }}
-    >
-      {address ? (
-        <Layout>
-          <CreateCollectionModal open={showModal} toggleModal={toggleModal} />
-          {showToast ? (
-            <Toast
-              content="Copied contract address to clipboard"
-              onDismiss={() => setShowToast(false)}
-            />
-          ) : null}
-          <Layout.Section>
-            <AlphaCard padding="0">
-              <IndexTable
-                resourceName={{
-                  plural: 'collections',
-                  singular: 'collection'
-                }}
-                headings={[
-                  { title: 'Name' },
-                  { title: 'Description' },
-                  { title: 'Contract Address' },
-                  { title: 'Symbol' },
-                  { title: 'Links' }
-                ]}
-                itemCount={collections.length}
-                selectable={false}
-                loading={isLoading}
-                emptyState={
-                  !isLoading ? (
+        primaryAction={{
+          content: 'Create collection',
+          disabled: !address,
+          onAction: () => toggleModal(true),
+          helpText: !address && 'You need to connect a digital wallet to create your collectibles'
+        }}
+      >
+        {address ? (
+          <Layout>
+            <CreateCollectionModal open={showModal} toggleModal={toggleModal} />
+            {showToast ? (
+              <Toast
+                content="Copied contract address to clipboard"
+                onDismiss={() => setShowToast(false)}
+              />
+            ) : null}
+            <Layout.Section>
+              <AlphaCard padding="0">
+                <IndexTable
+                  resourceName={{
+                    plural: 'collections',
+                    singular: 'collection'
+                  }}
+                  headings={[
+                    { title: 'Name' },
+                    { title: 'Description' },
+                    { title: 'Contract Address' },
+                    { title: 'Symbol' },
+                    { title: 'Links' }
+                  ]}
+                  itemCount={collections.length}
+                  selectable={false}
+                  loading={isLoading}
+                  emptyState={
                     <EmptySearchResult
                       title={'No collections found'}
                       description={'Get started by creating a collection'}
                       withIllustration
                     />
-                  ) : null
-                }
-              >
-                {collections.map(({ address: collectionAddress, name, description, symbol }) => (
-                  <IndexTable.Row key={collectionAddress}>
-                    <IndexTable.Cell>
-                      <Button
-                        plain
-                        size="slim"
-                        onClick={() => navigate(`/collectibles/${collectionAddress}`)}
-                      >
-                        {name}
-                      </Button>
-                    </IndexTable.Cell>
-                    <IndexTable.Cell>{description}</IndexTable.Cell>
-                    <IndexTable.Cell>
-                      <Tooltip content="Click to copy">
-                        <Tag
-                          accessibilityLabel="Contract Address"
-                          onClick={async (e) => {
-                            e.preventDefault()
-                            await navigator.clipboard.writeText(collectionAddress)
-                            setShowToast(true)
-                          }}
+                  }
+                >
+                  {collections.map(({ address: collectionAddress, name, description, symbol }) => (
+                    <IndexTable.Row key={collectionAddress}>
+                      <IndexTable.Cell>
+                        <Button
+                          plain
+                          size="slim"
+                          onClick={() => navigate(`/collectibles/${collectionAddress}`)}
                         >
-                          {address}
-                        </Tag>
-                      </Tooltip>
-                    </IndexTable.Cell>
-                    <IndexTable.Cell>{symbol}</IndexTable.Cell>
-                    <IndexTable.Cell>
-                      <a
-                        href={`https://testnets.opensea.io/assets/mumbai/${collectionAddress}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="View on OpenSea"
-                      >
-                        <img src={openSeaIcon} width={24} alt="OpenSea Marketplace" />
-                      </a>
-                    </IndexTable.Cell>
-                  </IndexTable.Row>
-                ))}
-              </IndexTable>
-            </AlphaCard>
-          </Layout.Section>
-        </Layout>
-      ) : (
-        <EmptyState heading="Connect your wallet" image={walletImage}>
-          <p style={{ marginBottom: '3rem' }}>You need to connect a digital wallet to continue.</p>
-          <ConnectWallet theme="light" btnTitle="Connect wallet" />
-        </EmptyState>
-      )}
-    </Page>
+                          {name}
+                        </Button>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell>{description}</IndexTable.Cell>
+                      <IndexTable.Cell>
+                        <Tooltip content="Click to copy">
+                          <Tag
+                            accessibilityLabel="Contract Address"
+                            onClick={async (e) => {
+                              e.preventDefault()
+                              await navigator.clipboard.writeText(collectionAddress)
+                              setShowToast(true)
+                            }}
+                          >
+                            {collectionAddress}
+                          </Tag>
+                        </Tooltip>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell>{symbol}</IndexTable.Cell>
+                      <IndexTable.Cell>
+                        <a
+                          href={`https://testnets.opensea.io/assets/mumbai/${collectionAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View on OpenSea"
+                        >
+                          <img src={openSeaIcon} width={24} alt="OpenSea Marketplace" />
+                        </a>
+                      </IndexTable.Cell>
+                    </IndexTable.Row>
+                  ))}
+                </IndexTable>
+              </AlphaCard>
+            </Layout.Section>
+          </Layout>
+        ) : (
+          <EmptyState heading="Connect your wallet" image={walletImage}>
+            <p style={{ marginBottom: '3rem' }}>
+              You need to connect a digital wallet to continue.
+            </p>
+            <ConnectWallet theme="light" btnTitle="Connect wallet" />
+          </EmptyState>
+        )}
+      </Page>
+    </Frame>
   )
 }

@@ -57,6 +57,7 @@ export function configurePublicApi(app) {
 }
 
 function getHmac(payload) {
+  if (!payload.id) throw new Error('payload.id is required')
   const hmacMessage = payload.id
   const hmac = createHmac('sha256', '0b563729acf5dcd71e56fb4a4b97bbf31f43')
   hmac.update(hmacMessage)

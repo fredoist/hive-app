@@ -3,6 +3,7 @@ import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import https from 'https'
 import react from '@vitejs/plugin-react'
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 if (
   process.env.npm_lifecycle_event === 'build' &&
@@ -42,7 +43,12 @@ if (host === 'localhost') {
 
 export default defineConfig({
   root: dirname(fileURLToPath(import.meta.url)),
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({
+      global: true
+    })
+  ],
   define: {
     'process.env.SHOPIFY_API_KEY': JSON.stringify(process.env.SHOPIFY_API_KEY)
   },
@@ -54,9 +60,9 @@ export default defineConfig({
     port: process.env.FRONTEND_PORT,
     hmr: hmrConfig,
     proxy: {
-      "^/(\\?.*)?$": proxyOptions,
-      "^/api(/|(\\?.*)?$)": proxyOptions,
-      "^/public(/|(\\?.*)?$)": proxyOptions,
-    },
+      '^/(\\?.*)?$': proxyOptions,
+      '^/api(/|(\\?.*)?$)': proxyOptions,
+      '^/public(/|(\\?.*)?$)': proxyOptions
+    }
   }
 })

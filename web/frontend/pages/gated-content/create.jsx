@@ -158,7 +158,7 @@ export default function CreateTokengate() {
                   <LegacyCard.Section title="SEGMENT">
                     <TextField
                       name="segment"
-                      helpText="Comma separated list of contract addresses"
+                      helpText="Comma separated list of collection addresses"
                       type="text"
                       placeholder="0x123, 0x456, 0x789"
                       {...fields.segment}
