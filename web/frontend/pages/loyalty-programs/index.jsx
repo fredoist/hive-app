@@ -74,10 +74,6 @@ export default function CreateTokengate() {
   return (
     <Page
       narrowWidth
-      backAction={{
-        content: 'Back to loyalty programs',
-        onAction: () => navigate('/loyalty-programs')
-      }}
       title="Create a new Airdrop"
     >
       <Layout>

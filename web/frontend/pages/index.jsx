@@ -63,11 +63,7 @@ export default function HomePage() {
             </p>
           </CalloutCard>
           <CalloutCard
-            title={
-              <Text variant="headingMd">
-                Loyalty Programs <Badge>Work in progress</Badge>
-              </Text>
-            }
+            title="Loyalty Programs"
             illustration={loyaltyProgramImage}
             primaryAction={{
               content: 'Manage loyalty programs',
