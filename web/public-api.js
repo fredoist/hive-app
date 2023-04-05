@@ -4,6 +4,7 @@ import Web3 from 'web3'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 
 import { getContractAddressesFromGate, getProductGates } from './api/gates.js'
+import {airdropItem, createAirdrop} from './api/airdrops.js'
 
 const sdk = new ThirdwebSDK('mumbai')
 const web3 = new Web3()
@@ -17,6 +18,16 @@ export function configurePublicApi(app) {
   // Configure CORS to allow requests to /public from any origin
   // enables pre-flight requests
   app.options('/public/*', cors(corsOptions))
+
+  app.post('/public/airdrop/redeem', cors(corsOptions), async (req, res) => {
+    const { wallet, item } = req.body
+    try {
+      await airdropItem(wallet, item);
+      res.status(200).json({ ok: true })
+    } catch(error) {
+      res.status(500).json({ error })
+    }
+  })
 
   app.post('/public/gates', cors(corsOptions), async (req, res) => {
     const { shopDomain, productGid } = req.body

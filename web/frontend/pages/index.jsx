@@ -71,7 +71,7 @@ export default function HomePage() {
             illustration={loyaltyProgramImage}
             primaryAction={{
               content: 'Manage loyalty programs',
-              disabled: true
+              onAction: () => navigate('/loyalty-programs')
             }}
           >
             <p>

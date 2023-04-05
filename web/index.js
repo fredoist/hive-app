@@ -10,6 +10,7 @@ import createGate from './api/create-gate.js';
 import deleteGate from './api/delete-gate.js';
 
 import { configurePublicApi } from './public-api.js'
+import { createAirdrop } from './api/airdrops.js'
 
 const { PORT = 3000 } = process.env
 
@@ -32,6 +33,18 @@ app.post(shopify.config.webhooks.path, shopify.processWebhooks({ webhookHandlers
 app.use(express.json())
 configurePublicApi(app)
 app.use('/api/*', shopify.validateAuthenticatedSession())
+
+app.post('/api/airdrops', async (req, res) => {
+  const { name, address, productGid } = req.body
+  try {
+    const metafields = await createAirdrop({ session: res.locals.shopify.session, name, address, productGid });
+    res.status(200).json({ metafields })
+  } catch (error) {
+    console.error('Failed to process airdrop/create:', error)
+    res.status(500).json({ error })
+  }
+})
+
 app.get('/api/gates', async (_, res) => {
   try {
     const response = await retrieveGates(res.locals.shopify.session)
