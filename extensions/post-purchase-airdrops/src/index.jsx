@@ -46,7 +46,7 @@ extend("Checkout::PostPurchase::ShouldRender", async ({ inputData, storage }) =>
   }
 
   return {
-    render: true,
+    render: shouldRender,
   };
 });
 
