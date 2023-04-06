@@ -96,7 +96,7 @@ export function App() {
             disabled={loading || airdropped}
             onPress={async () => {
               setLoading(true)
-              const req = await fetch('https://7678-177-228-34-73.ngrok.io/api/public/airdrops', {
+              const req = await fetch('https://hive-app.fly.dev/api/public/airdrops', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
