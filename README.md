@@ -2,7 +2,7 @@
 
 Hive App enables merchants to offer token gated experiences to customers, creating their own collections of tokens within the embedded app and adding exclusive discounts for token owners of a contract.
 
-![Preview](.github/preview.png)
+![Preview](.github/preview-drop.png)
 
 ### Features
 
