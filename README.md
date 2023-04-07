@@ -34,3 +34,11 @@ Try the app at: https://hive-app-landing.fredoist.repl.co/
 - Run `npm run dev`
 - Replace the host variable for your ngrok.io tunnel on `extensions/tokengate-src/useEvaluateGate.js`, `extensions/tokengate/blocks/app-block.liquid`.
 - Run `npm run build --prefix extensions/tokengate-src`
+
+## Made with
+- [Thirdweb SDK](https://thirdweb.com)
+- [Shopify Gates API](https://shopify.dev/docs/apps/blockchain/tokengating)
+- Shopify App CLI
+- Deployed on fly.io
+
+Thirdweb SDK is used together with Shopify Gates API to enable tokengating experiences for customers. Thirdweb is used to create NFT collections as well as fetching data for a contract, while Gates API is used to save data about requirements and actions to be taken when a customer meets the requeriemients.
